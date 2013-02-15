@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import urllib2, re, sys
+import re, sys, time, urllib, urllib2
 from bs4 import BeautifulSoup
 
 # HTML element matchers
@@ -7,6 +7,7 @@ is_type_node = lambda tag: tag.string == "Type"
 is_rules_node = lambda tag: tag.string == "Rules"
 is_flavor_node = lambda tag: tag.string == "Flavor"
 is_description_node = lambda tag: tag.has_key("name") and tag["name"] == "description"
+is_rulings_node = lambda tag: tag.string == "Rulings"
 
 # Mappings between DeckBox mana types and more verbose ones
 manaConversions = {
@@ -66,6 +67,7 @@ def parseCardPage(url):
 	mana - A dictionary containing the mana cost of the card. A card requiring two
 		black mana and 3 colorless mana would appear as {'black': 2, 'colorless': 3}.
 		Variable mana cost is converted to 1 colorless mana.
+	extid - The unique ID of the card on WOTC's Gatherer tool
 	"""
 
 	ret = {}
@@ -84,7 +86,7 @@ def parseCardPage(url):
 		ret["subtype"] = None
 
 	# Join all of the non-flavor text on the card
-	ret["text"] = ''.join(
+	ret["text"] = ' '.join(
 		[x.string for x in properties.find(is_rules_node).next_sibling.strings]
 		)
 
@@ -107,11 +109,26 @@ def parseCardPage(url):
 			ret["mana"][color] += count
 		else:
 			ret["mana"][color] = count
+	
+	try:
+		gatherer_url = soup.find(is_rulings_node).next_sibling.next_sibling.a["href"]
+		ret["extid"] = re.search("multiverseid=(\d+)", gatherer_url).group(1)
+	except AttributeError:
+		ret["extid"] = None
 
 	return ret
 
-def main(url):
+def main(start_page = 1):
+	for i in range(int(start_page), 445):
+		html = urllib2.urlopen("http://deckbox.org/games/mtg/cards?p=%i" % i).read()
+		soup = BeautifulSoup(html)
+		for card_url in [x.find('a')['href'] for x in soup.find(class_="set_cards").findAll("td", class_="card_name")]:
+			print parseCardPage(urllib.quote(card_url, ':/'))
+			time.sleep(5)
 	print parseCardPage(url)
 
 if __name__ == "__main__":
-	main(sys.argv[1])
+	if(len(sys.argv) == 2):
+		main(sys.argv[1])
+	else:
+		main()
