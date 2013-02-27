@@ -55,6 +55,16 @@ def convertMana(string):
 	except ValueError:
 		raise
 
+
+def fixType(typeString):
+	"""
+	Some cards have non-standard types. This fixes them.
+	"""
+
+	if typeString == "eaturecray": return "creature"
+	return typeString
+
+
 def parseCardPage(url):
 	"""
 	Downloads the given URL and parses it into a dictionary of card metadata.
@@ -167,7 +177,7 @@ INSERT INTO Cards (name, mana, type, subtype, cardtext, flavortext, setid, extid
 					'name': card['name'],
 					'mana': ','.join(['%s=>%s' % \
 						(mana, card['mana'][mana]) for mana in card['mana']]),
-					'type': card['type'].lower(),
+					'type': fixType(card['type'].lower()),
 					'subtype': card['subtype'],
 					'cardtext': card['text'],
 					'flavortext': card['flavortext'],
