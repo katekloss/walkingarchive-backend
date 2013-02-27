@@ -106,7 +106,7 @@ def parseCardPage(url):
 	# Create a unique list of all editions this card appears in
 	ret["editions"] = set()
 	for edition in properties.findAll(class_="edition_price"):
-		ret["editions"].add(edition.img["data-title"])
+		ret["editions"].add(edition.img["data-title"].strip())
 
 	# Transforms a mana string like "{1}{B}" into 1 colorless mana and 1 black mana
 	ret["mana"] = {}
@@ -134,7 +134,11 @@ def main(start_page = 1):
 		html = urllib2.urlopen("http://deckbox.org/games/mtg/cards?p=%i" % i).read()
 		soup = BeautifulSoup(html)
 		for card_url in [x.find('a')['href'] for x in soup.find(class_="set_cards").findAll("td", class_="card_name")]:
-			card = parseCardPage(urllib.quote(card_url, ':/'))
+			try:
+				card = parseCardPage(urllib.quote(card_url, ':/'))
+			except:
+				print "Failed to parse \"%s\"" % card_url
+				raise
 
 			for edition in card['editions']:
 				query = "SELECT setid FROM Sets WHERE setname=%(name)s"
@@ -152,8 +156,8 @@ def main(start_page = 1):
 					except psycopg2.IntegrityError:
 						print "Set \"%s\" violates schema constraints" % edition
 						raise
-					set_id = cursor.fetchone()[0]
-				
+				set_id = cursor.fetchone()[0]
+
 				query = """
 INSERT INTO Cards (name, mana, type, subtype, cardtext, flavortext, setid, extid)
 	VALUES (%(name)s, %(mana)s, %(type)s, %(subtype)s, %(cardtext)s,
