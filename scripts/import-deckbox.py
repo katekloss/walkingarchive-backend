@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import re, sys, time, urllib, urllib2
+import psycopg2, re, sys, time, urllib, urllib2
 from bs4 import BeautifulSoup
 
 # HTML element matchers
@@ -119,13 +119,63 @@ def parseCardPage(url):
 	return ret
 
 def main(start_page = 1):
+
+	conn = psycopg2.connect("dbname=walkingarchive user=walkingarchive password=walkingarchive")
+	cursor = conn.cursor()
 	for i in range(int(start_page), 445):
 		html = urllib2.urlopen("http://deckbox.org/games/mtg/cards?p=%i" % i).read()
 		soup = BeautifulSoup(html)
 		for card_url in [x.find('a')['href'] for x in soup.find(class_="set_cards").findAll("td", class_="card_name")]:
-			print parseCardPage(urllib.quote(card_url, ':/'))
+			card = parseCardPage(urllib.quote(card_url, ':/'))
+
+			for edition in card['editions']:
+				query = "SELECT setid FROM Sets WHERE setname=%(name)s"
+				parameters = {
+					'name': edition
+				}
+				cursor.execute(query, parameters)
+				if cursor.rowcount == 0:
+					query = "INSERT INTO Sets (setname) VALUES (%(name)s) RETURNING setid"
+					try:
+						cursor.execute(query, parameters)
+					except psycopg2.DataError:
+						print "Set \"%s\" not supported by schema" % edition
+						raise
+					except psycopg2.IntegrityError:
+						print "Set \"%s\" violates schema constraints" % edition
+						raise
+					set_id = cursor.fetchone()[0]
+				
+				query = """
+INSERT INTO Cards (name, mana, type, subtype, cardtext, flavortext, setid, extid)
+	VALUES (%(name)s, %(mana)s, %(type)s, %(subtype)s, %(cardtext)s,
+		%(flavortext)s, %(setid)s, %(extid)s)
+"""
+				parameters = {
+					'name': card['name'],
+					'mana': ','.join(['%s=>%s' % \
+						(mana, card['mana'][mana]) for mana in card['mana']]),
+					'type': card['type'].lower(),
+					'subtype': card['subtype'],
+					'cardtext': card['text'],
+					'flavortext': card['flavortext'],
+					'setid': set_id,
+					'extid': card['extid']
+				}
+				try:
+					cursor.execute(query, parameters)
+				except psycopg2.DataError:
+					print "Card \"%s\" in set \"%s\" not supported by schema" % \
+						(card['name'], edition)
+					raise
+				except psycopg2.IntegrityError:
+					print "Card \"%s\" in set \"%s\" violates schema constraints" % \
+						(card['name'], edition)
+					raise
+
 			time.sleep(5)
-	print parseCardPage(url)
+		conn.commit()
+		print "Processed page %i" % i
 
 if __name__ == "__main__":
 	if(len(sys.argv) == 2):
