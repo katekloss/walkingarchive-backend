@@ -61,7 +61,12 @@ def fixType(typeString):
 	Some cards have non-standard types. This fixes them.
 	"""
 
+	# Atinlay Igpay
 	if typeString == "eaturecray": return "creature"
+
+	# B.F.M. (Big Furry Monster Left/Right)
+	if typeString == "see": return "creature"
+	
 	return typeString
 
 
