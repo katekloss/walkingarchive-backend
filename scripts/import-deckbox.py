@@ -31,7 +31,12 @@ manaConversions = {
 	"2U": "2blue",
 	"2B": "2black",
 	"2R": "2red",
-	"2G": "2green"
+	"2G": "2green",
+	"WP": "white", # Phyrexian
+	"UP": "blue",
+	"BP": "black",
+	"RP": "red",
+	"GP": "green"
 }
 
 def convertMana(string):
@@ -77,9 +82,9 @@ def parseCardPage(url):
 	properties = soup.find(class_="card_properties")
 
 	# Convert a type like "Enchantment - Aura" into a type of "Enchantment"
-	# and a subtype of "Aura"
+	# and a subtype of "Aura". Any supertypes such as "Legendary" are discarded.
 	full_type = properties.find(is_type_node).next_sibling.string.split('-')
-	ret["type"] = full_type[0].strip()
+	ret["type"] = full_type[0].strip().split(' ')[-1]
 	try:
 		ret["subtype"] = full_type[1].strip()
 	except IndexError:
