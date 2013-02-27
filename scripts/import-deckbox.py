@@ -91,9 +91,12 @@ def parseCardPage(url):
 		ret["subtype"] = None
 
 	# Join all of the non-flavor text on the card
-	ret["text"] = ' '.join(
-		[x.string for x in properties.find(is_rules_node).next_sibling.strings]
-		)
+	try:
+		ret["text"] = ' '.join(
+			[x.string for x in properties.find(is_rules_node).next_sibling.strings]
+			)
+	except AttributeError:
+		ret["text"] = None
 
 	try:
 		ret["flavortext"] = properties.find(is_flavor_node).next_sibling.string

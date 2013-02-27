@@ -32,7 +32,7 @@ CREATE TABLE Cards (
 	mana hstore NOT NULL,
 	type type NOT NULL,
 	subtype character varying(40),
-	cardtext text NOT NULL,
+	cardtext text,
 	flavortext text,
 	setid integer NOT NULL,
 	extid integer NOT NULL,
