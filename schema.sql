@@ -1,0 +1,42 @@
+---
+--- Extensions
+---
+CREATE EXTENSION hstore;
+
+---
+--- Types
+---
+
+CREATE TYPE manacolor AS ENUM('white', 'blue', 'black', 'red', 'green', 'colorless',
+	'whiteblue', 'whiteblack', 'blueblack', 'bluered', 'blackred',
+	'blackgreen', 'redgreen', 'redwhite', 'greenwhite', 'greenblue',
+	'2white', '2blue', '2black', '2red', '2green');
+
+CREATE TYPE type AS ENUM('artifact', 'creature', 'enchantment', 'instant',
+	'land', 'plane', 'planeswalker', 'scheme', 'sorcery', 'tribal', 'vanguard');
+
+---
+--- Tables
+----
+
+CREATE TABLE Sets (
+	setid serial NOT NULL,
+	setname character varying(25),
+
+	PRIMARY KEY (setid)
+);
+
+CREATE TABLE Cards (
+	cardid serial NOT NULL,
+	name character varying(150) NOT NULL,
+	mana hstore NOT NULL,
+	type type NOT NULL,
+	subtype character varying(40),
+	cardtext text NOT NULL,
+	flavortext text NOT NULL,
+	setid integer NOT NULL,
+	extid integer NOT NULL,
+
+	PRIMARY KEY (cardid),
+	FOREIGN KEY (setid) REFERENCES Sets ON DELETE CASCADE
+);
