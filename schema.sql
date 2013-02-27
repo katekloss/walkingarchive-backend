@@ -21,7 +21,7 @@ CREATE TYPE type AS ENUM('artifact', 'creature', 'enchantment', 'instant',
 
 CREATE TABLE Sets (
 	setid serial NOT NULL,
-	setname character varying(25),
+	setname character varying(50),
 
 	PRIMARY KEY (setid)
 );
@@ -33,7 +33,7 @@ CREATE TABLE Cards (
 	type type NOT NULL,
 	subtype character varying(40),
 	cardtext text NOT NULL,
-	flavortext text NOT NULL,
+	flavortext text,
 	setid integer NOT NULL,
 	extid integer NOT NULL,
 
