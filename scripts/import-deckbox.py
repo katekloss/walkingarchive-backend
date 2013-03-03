@@ -155,12 +155,40 @@ def main(start_page = 1):
 				print "Failed to parse \"%s\"" % card_url
 				raise
 
+			query = """
+INSERT INTO Cards (name, mana, type, subtype, cardtext, flavortext, extid)
+	VALUES (%(name)s, %(mana)s, %(type)s, %(subtype)s, %(cardtext)s,
+		%(flavortext)s, %(extid)s)
+	RETURNING cardid
+"""
+			parameters = {
+				'name': card['name'],
+				'mana': ','.join(['%s=>%s' % \
+					(mana, card['mana'][mana]) for mana in card['mana']]),
+				'type': fixType(card['type'].lower()),
+				'subtype': card['subtype'],
+				'cardtext': card['text'],
+				'flavortext': card['flavortext'],
+				'extid': card['extid']
+			}
+			try:
+				cursor.execute(query, parameters)
+			except psycopg2.DataError:
+				print "Card \"%s\" not supported by schema" % card['name']
+				raise
+			except psycopg2.IntegrityError:
+				print "Card \"%s\" violates schema constraints" % card['name']
+				raise
+
+			card_id = cursor.fetchone()[0]
+
 			for edition in card['editions']:
 				query = "SELECT setid FROM Sets WHERE setname=%(name)s"
 				parameters = {
 					'name': edition
 				}
 				cursor.execute(query, parameters)
+
 				if cursor.rowcount == 0:
 					query = "INSERT INTO Sets (setname) VALUES (%(name)s) RETURNING setid"
 					try:
@@ -171,34 +199,14 @@ def main(start_page = 1):
 					except psycopg2.IntegrityError:
 						print "Set \"%s\" violates schema constraints" % edition
 						raise
-				set_id = cursor.fetchone()[0]
 
-				query = """
-INSERT INTO Cards (name, mana, type, subtype, cardtext, flavortext, setid, extid)
-	VALUES (%(name)s, %(mana)s, %(type)s, %(subtype)s, %(cardtext)s,
-		%(flavortext)s, %(setid)s, %(extid)s)
-"""
+				set_id = cursor.fetchone()[0]
+				query = "INSERT INTO CardSets (cardid, setid) VALUES (%(cardid)s, %(setid)s)"
 				parameters = {
-					'name': card['name'],
-					'mana': ','.join(['%s=>%s' % \
-						(mana, card['mana'][mana]) for mana in card['mana']]),
-					'type': fixType(card['type'].lower()),
-					'subtype': card['subtype'],
-					'cardtext': card['text'],
-					'flavortext': card['flavortext'],
-					'setid': set_id,
-					'extid': card['extid']
+					'cardid': card_id,
+					'setid': set_id
 				}
-				try:
-					cursor.execute(query, parameters)
-				except psycopg2.DataError:
-					print "Card \"%s\" in set \"%s\" not supported by schema" % \
-						(card['name'], edition)
-					raise
-				except psycopg2.IntegrityError:
-					print "Card \"%s\" in set \"%s\" violates schema constraints" % \
-						(card['name'], edition)
-					raise
+				cursor.execute(query, parameters)
 
 			time.sleep(5)
 		conn.commit()
