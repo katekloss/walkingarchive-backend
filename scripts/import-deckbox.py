@@ -55,24 +55,6 @@ def convertMana(string):
 	except ValueError:
 		raise
 
-
-def fixType(typeString):
-	"""
-	Some cards have non-standard types. This fixes them.
-	"""
-
-	# Atinlay Igpay
-	if typeString == "eaturecray": return "creature"
-
-	# B.F.M. (Big Furry Monster Left/Right)
-	if typeString == "see": return "creature"
-
-	# Charm School
-	if typeString == "player": return "enchantment"
-
-	return typeString
-
-
 def parseCardPage(url):
 	"""
 	Downloads the given URL and parses it into a dictionary of card metadata.
@@ -165,6 +147,7 @@ def main(start_page = 1):
 				print "Failed to parse \"%s\"" % sane_url
 				raise
 
+			cursor.execute("SAVEPOINT PreCardInsert")
 			query = """
 INSERT INTO Cards (name, mana, type, subtype, cardtext, flavortext, extid)
 	VALUES (%(name)s, %(mana)s, %(type)s, %(subtype)s, %(cardtext)s,
@@ -175,7 +158,7 @@ INSERT INTO Cards (name, mana, type, subtype, cardtext, flavortext, extid)
 				'name': card['name'].encode('utf-8'),
 				'mana': ','.join(['%s=>%s' % \
 					(mana, card['mana'][mana]) for mana in card['mana']]),
-				'type': fixType(card['type'].lower()),
+				'type': card['type'].lower(),
 				'subtype': card['subtype'],
 				'cardtext': card['text'],
 				'flavortext': card['flavortext'],
@@ -183,9 +166,14 @@ INSERT INTO Cards (name, mana, type, subtype, cardtext, flavortext, extid)
 			}
 			try:
 				cursor.execute(query, parameters)
-			except psycopg2.DataError:
-				print "Card \"%s\" not supported by schema" % card['name']
-				raise
+			except psycopg2.DataError, e:
+				if e.pgcode == "22P02":
+					print "Warning: card \"%s\" threw an invalid type exception" % card['name']
+					cursor.execute("ROLLBACK TO SAVEPOINT PreCardInsert")
+					continue
+				else:
+					print "Card \"%s\" not supported by schema" % card['name']
+					raise
 			except psycopg2.IntegrityError:
 				print "Card \"%s\" violates schema constraints" % card['name']
 				raise
@@ -201,6 +189,9 @@ INSERT INTO Cards (name, mana, type, subtype, cardtext, flavortext, extid)
 
 				if cursor.rowcount == 0:
 					query = "INSERT INTO Sets (setname) VALUES (%(name)s) RETURNING setid"
+					parameters = {
+						'name': edition
+					}
 					try:
 						cursor.execute(query, parameters)
 					except psycopg2.DataError:
