@@ -9,3 +9,6 @@
 .project
 .pydevproject
 .classpath
+
+# built files #
+/bin
