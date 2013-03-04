@@ -66,7 +66,7 @@ def fixType(typeString):
 
 	# B.F.M. (Big Furry Monster Left/Right)
 	if typeString == "see": return "creature"
-	
+
 	return typeString
 
 
@@ -150,9 +150,16 @@ def main(start_page = 1):
 		soup = BeautifulSoup(html)
 		for card_url in [x.find('a')['href'] for x in soup.find(class_="set_cards").findAll("td", class_="card_name")]:
 			try:
-				card = parseCardPage(urllib.quote(card_url, ':/'))
+				(scheme, everything_else) = card_url.split('://')
+				sane_url = scheme + "://" + urllib2.quote(everything_else.encode('utf-8'))
 			except:
-				print "Failed to parse \"%s\"" % card_url
+				print "Failed to encode \"%s\"" % card_url
+				raise
+
+			try:
+				card = parseCardPage(sane_url)
+			except:
+				print "Failed to parse \"%s\"" % sane_url
 				raise
 
 			query = """
