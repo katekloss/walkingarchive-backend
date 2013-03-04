@@ -13,7 +13,7 @@ CREATE TYPE manacolor AS ENUM('white', 'blue', 'black', 'red', 'green', 'colorle
 	'2white', '2blue', '2black', '2red', '2green');
 
 CREATE TYPE type AS ENUM('artifact', 'creature', 'enchantment', 'instant',
-	'land', 'plane', 'planeswalker', 'scheme', 'sorcery', 'tribal', 'vanguard');
+	'land', 'phenomenon', 'plane', 'planeswalker', 'scheme', 'sorcery', 'tribal', 'vanguard');
 
 ---
 --- Tables
