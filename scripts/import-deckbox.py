@@ -101,7 +101,7 @@ def parseCardPage(url):
 	full_type = properties.find(is_type_node).next_sibling.string.split('-')
 	ret["type"] = full_type[0].strip().split(' ')[-1]
 	try:
-		ret["subtype"] = full_type[1].strip()
+		ret["subtype"] = full_type[1].strip().encode('utf-8')
 	except IndexError:
 		ret["subtype"] = None
 
@@ -109,19 +109,19 @@ def parseCardPage(url):
 	try:
 		ret["text"] = ' '.join(
 			[x.string for x in properties.find(is_rules_node).next_sibling.strings]
-			)
+			).encode('utf-8')
 	except AttributeError:
 		ret["text"] = None
 
 	try:
-		ret["flavortext"] = properties.find(is_flavor_node).next_sibling.string
+		ret["flavortext"] = properties.find(is_flavor_node).next_sibling.string.encode('utf-8')
 	except AttributeError:
 		ret["flavortext"] = None
 
 	# Create a unique list of all editions this card appears in
 	ret["editions"] = set()
 	for edition in properties.findAll(class_="edition_price"):
-		ret["editions"].add(edition.img["data-title"].strip())
+		ret["editions"].add(edition.img["data-title"].strip().encode('utf-8'))
 
 	# Transforms a mana string like "{1}{B}" into 1 colorless mana and 1 black mana
 	ret["mana"] = {}
@@ -169,7 +169,7 @@ INSERT INTO Cards (name, mana, type, subtype, cardtext, flavortext, extid)
 	RETURNING cardid
 """
 			parameters = {
-				'name': card['name'],
+				'name': card['name'].encode('utf-8'),
 				'mana': ','.join(['%s=>%s' % \
 					(mana, card['mana'][mana]) for mana in card['mana']]),
 				'type': fixType(card['type'].lower()),
