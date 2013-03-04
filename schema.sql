@@ -36,7 +36,7 @@ CREATE TABLE Cards (
 	flavortext text,
 	extid integer NOT NULL,
 
-	PRIMARY KEY (cardid),
+	PRIMARY KEY (cardid)
 );
 
 CREATE TABLE CardSets (
