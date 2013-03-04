@@ -32,11 +32,18 @@ CREATE TABLE Cards (
 	mana hstore NOT NULL,
 	type type NOT NULL,
 	subtype character varying(40),
-	cardtext text NOT NULL,
+	cardtext text,
 	flavortext text,
-	setid integer NOT NULL,
 	extid integer NOT NULL,
 
-	PRIMARY KEY (cardid),
+	PRIMARY KEY (cardid)
+);
+
+CREATE TABLE CardSets (
+	cardid integer NOT NULL,
+	setid integer NOT NULL,
+
+	PRIMARY KEY (cardid, setid),
+	FOREIGN KEY (cardid) REFERENCES Cards ON DELETE CASCADE,
 	FOREIGN KEY (setid) REFERENCES Sets ON DELETE CASCADE
 );

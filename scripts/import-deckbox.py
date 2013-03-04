@@ -55,6 +55,21 @@ def convertMana(string):
 	except ValueError:
 		raise
 
+
+def fixType(typeString):
+	"""
+	Some cards have non-standard types. This fixes them.
+	"""
+
+	# Atinlay Igpay
+	if typeString == "eaturecray": return "creature"
+
+	# B.F.M. (Big Furry Monster Left/Right)
+	if typeString == "see": return "creature"
+
+	return typeString
+
+
 def parseCardPage(url):
 	"""
 	Downloads the given URL and parses it into a dictionary of card metadata.
@@ -91,9 +106,12 @@ def parseCardPage(url):
 		ret["subtype"] = None
 
 	# Join all of the non-flavor text on the card
-	ret["text"] = ' '.join(
-		[x.string for x in properties.find(is_rules_node).next_sibling.strings]
-		)
+	try:
+		ret["text"] = ' '.join(
+			[x.string for x in properties.find(is_rules_node).next_sibling.strings]
+			)
+	except AttributeError:
+		ret["text"] = None
 
 	try:
 		ret["flavortext"] = properties.find(is_flavor_node).next_sibling.string
@@ -103,7 +121,7 @@ def parseCardPage(url):
 	# Create a unique list of all editions this card appears in
 	ret["editions"] = set()
 	for edition in properties.findAll(class_="edition_price"):
-		ret["editions"].add(edition.img["data-title"])
+		ret["editions"].add(edition.img["data-title"].strip())
 
 	# Transforms a mana string like "{1}{B}" into 1 colorless mana and 1 black mana
 	ret["mana"] = {}
@@ -131,7 +149,45 @@ def main(start_page = 1):
 		html = urllib2.urlopen("http://deckbox.org/games/mtg/cards?p=%i" % i).read()
 		soup = BeautifulSoup(html)
 		for card_url in [x.find('a')['href'] for x in soup.find(class_="set_cards").findAll("td", class_="card_name")]:
-			card = parseCardPage(urllib.quote(card_url, ':/'))
+			try:
+				(scheme, everything_else) = card_url.split('://')
+				sane_url = scheme + "://" + urllib2.quote(everything_else.encode('utf-8'))
+			except:
+				print "Failed to encode \"%s\"" % card_url
+				raise
+
+			try:
+				card = parseCardPage(sane_url)
+			except:
+				print "Failed to parse \"%s\"" % sane_url
+				raise
+
+			query = """
+INSERT INTO Cards (name, mana, type, subtype, cardtext, flavortext, extid)
+	VALUES (%(name)s, %(mana)s, %(type)s, %(subtype)s, %(cardtext)s,
+		%(flavortext)s, %(extid)s)
+	RETURNING cardid
+"""
+			parameters = {
+				'name': card['name'],
+				'mana': ','.join(['%s=>%s' % \
+					(mana, card['mana'][mana]) for mana in card['mana']]),
+				'type': fixType(card['type'].lower()),
+				'subtype': card['subtype'],
+				'cardtext': card['text'],
+				'flavortext': card['flavortext'],
+				'extid': card['extid']
+			}
+			try:
+				cursor.execute(query, parameters)
+			except psycopg2.DataError:
+				print "Card \"%s\" not supported by schema" % card['name']
+				raise
+			except psycopg2.IntegrityError:
+				print "Card \"%s\" violates schema constraints" % card['name']
+				raise
+
+			card_id = cursor.fetchone()[0]
 
 			for edition in card['editions']:
 				query = "SELECT setid FROM Sets WHERE setname=%(name)s"
@@ -139,6 +195,7 @@ def main(start_page = 1):
 					'name': edition
 				}
 				cursor.execute(query, parameters)
+
 				if cursor.rowcount == 0:
 					query = "INSERT INTO Sets (setname) VALUES (%(name)s) RETURNING setid"
 					try:
@@ -149,34 +206,14 @@ def main(start_page = 1):
 					except psycopg2.IntegrityError:
 						print "Set \"%s\" violates schema constraints" % edition
 						raise
-					set_id = cursor.fetchone()[0]
-				
-				query = """
-INSERT INTO Cards (name, mana, type, subtype, cardtext, flavortext, setid, extid)
-	VALUES (%(name)s, %(mana)s, %(type)s, %(subtype)s, %(cardtext)s,
-		%(flavortext)s, %(setid)s, %(extid)s)
-"""
+
+				set_id = cursor.fetchone()[0]
+				query = "INSERT INTO CardSets (cardid, setid) VALUES (%(cardid)s, %(setid)s)"
 				parameters = {
-					'name': card['name'],
-					'mana': ','.join(['%s=>%s' % \
-						(mana, card['mana'][mana]) for mana in card['mana']]),
-					'type': card['type'].lower(),
-					'subtype': card['subtype'],
-					'cardtext': card['text'],
-					'flavortext': card['flavortext'],
-					'setid': set_id,
-					'extid': card['extid']
+					'cardid': card_id,
+					'setid': set_id
 				}
-				try:
-					cursor.execute(query, parameters)
-				except psycopg2.DataError:
-					print "Card \"%s\" in set \"%s\" not supported by schema" % \
-						(card['name'], edition)
-					raise
-				except psycopg2.IntegrityError:
-					print "Card \"%s\" in set \"%s\" violates schema constraints" % \
-						(card['name'], edition)
-					raise
+				cursor.execute(query, parameters)
 
 			time.sleep(5)
 		conn.commit()
