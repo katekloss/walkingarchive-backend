@@ -48,3 +48,11 @@ CREATE TABLE CardSets (
 	FOREIGN KEY (cardid) REFERENCES Cards ON DELETE CASCADE,
 	FOREIGN KEY (setid) REFERENCES Sets ON DELETE CASCADE
 );
+
+CREATE TABLE CardVectors (
+	cardid integer NOT NULL,
+	textvector tsvector,
+
+	PRIMARY KEY (cardid),
+	FOREIGN KEY (cardid) REFERENCES Cards ON DELETE CASCADE
+);

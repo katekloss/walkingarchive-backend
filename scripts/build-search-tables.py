@@ -8,7 +8,9 @@ def main():
 
 	query = """
 INSERT INTO CardVectors
-SELECT cardid, to_tsvector(cardtext) AS vector
+SELECT cardid, to_tsvector(
+	concat_ws(' ', name, type, subtype, cardtext, flavortext)
+	) AS textvector
 FROM Cards;"""
 	cursor.execute(query)
 
