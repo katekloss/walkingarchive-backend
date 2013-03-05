@@ -56,3 +56,9 @@ CREATE TABLE CardVectors (
 	PRIMARY KEY (cardid),
 	FOREIGN KEY (cardid) REFERENCES Cards ON DELETE CASCADE
 );
+
+---
+--- Indexes
+---
+
+CREATE INDEX idx_cardvectors_textvector ON CardVectors USING gin(textvector);
