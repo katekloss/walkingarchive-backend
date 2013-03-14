@@ -57,6 +57,31 @@ CREATE TABLE CardVectors (
 	FOREIGN KEY (cardid) REFERENCES Cards ON DELETE CASCADE
 );
 
+
+---
+--- Views
+---
+
+CREATE OR REPLACE VIEW RawDictionary (word, count) AS
+SELECT word, count FROM
+(
+	SELECT regexp_split_to_table(
+		lower(
+			concat_ws(' ', name, type, subtype, cardtext, flavortext)
+		), E'[^a-zA-Z]+'
+	) AS word,
+	COUNT(*) AS count
+	FROM Cards
+	GROUP BY word
+	ORDER BY count DESC
+) AS X
+WHERE word != '';
+
+CREATE OR REPLACE VIEW TokenDictionary (token, count) AS
+SELECT word AS token, nentry AS count
+FROM ts_stat('SELECT textvector FROM CardVectors')
+ORDER BY count DESC;
+
 ---
 --- Indexes
 ---
