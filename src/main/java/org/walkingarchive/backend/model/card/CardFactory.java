@@ -50,11 +50,15 @@ public class CardFactory {
     // COLLECTION
     //----------------------------------------------------------------------------------------------
     
-    public List<Card> getUserCollection(User user) {
+    public List<UserCardCollection> getAllUserCollections() {
         return null;
     }
     
-    public List<Card> getUserCollectionByType(User user, String type) {
+    public UserCardCollection getUserCollection(User user) {
+        return null;
+    }
+    
+    public UserCardCollection getUserCollectionByType(User user, String type) {
         return null;
     }
 }

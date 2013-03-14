@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.walkingarchive.backend.model.security.User;
 
 public class UserCardCollection {
@@ -57,6 +60,20 @@ public class UserCardCollection {
                 result.add(card);
             }
         }
+        
+        return result;
+    }
+
+    public JSONObject toJson() throws JSONException {
+        JSONObject result = new JSONObject();
+        result.put("id", getIdString());
+        result.put("owner", getOwner().toJson());
+
+        JSONArray collection = new JSONArray();
+        for(Card card : getCollection()) {
+            collection.put(card.toJson());
+        }
+        result.put("collection", collection);
         
         return result;
     }

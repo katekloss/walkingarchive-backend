@@ -1,5 +1,7 @@
 package org.walkingarchive.backend.controller;
 
+import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.ServletContext;
@@ -29,20 +31,68 @@ public class CardController {
     protected UriInfo uriInfo;
     
     @GET
-    @Path("{card}")
-    public JSONObject getCard(@PathParam("card") String card) throws JSONException {
-        UUID cardId = UUID.fromString(card);
-        Card c = CardFactory.getInstance().getCard(cardId);
-        return toJson(c);
+    public JSONArray getAll() throws JSONException {
+        //validate card input
+        List<Card> cards = CardFactory.getInstance().getAllCards();
+        JSONArray cardList = new JSONArray();
+        for (Card c : cards) {
+            cardList.put(c.toJson());
+        }
+        return cardList;
     }
     
-    public static JSONObject toJson(Card card) throws JSONException {
-        JSONObject result = new JSONObject();
-        result.put("id", card.getIdString());
-        result.put("name", card.getName());
-        result.put("type", card.getType());
-        result.put("manacolor", card.getManaColor());
-        
-        return result;
+    @GET
+    @Path("id/{card}")
+    public JSONObject getCardById(@PathParam("card") String card) throws JSONException {
+        UUID cardId = UUID.fromString(card);
+        Card c = CardFactory.getInstance().getCard(cardId);
+        return c.toJson();
+    }
+    
+    @GET
+    @Path("name/{card}")
+    public JSONArray getCardsByName(@PathParam("card") String card) throws JSONException {
+        //TODO - validate card input
+        List<Card> cards = CardFactory.getInstance().getCardsByName(card);
+        JSONArray cardList = new JSONArray();
+        for (Card c : cards) {
+            cardList.put(c.toJson());
+        }
+        return cardList;
+    }
+    
+    @GET
+    @Path("name/{card}/version/{version}")
+    public JSONObject getCardByNameAndVersion(@PathParam("card") String card, 
+            @PathParam("version") String version) throws JSONException {
+        //TODO - validate input
+        Card c = CardFactory.getInstance().getCardByNameAndVersion(card, version);
+        return c.toJson();
+    }
+    
+    @GET
+    @Path("type/{type}")
+    public JSONArray getCardsByType(@PathParam("type") String type) throws JSONException {
+        //TODO - validate input
+        List<Card> cards = CardFactory.getInstance().getCardsByType(type);
+        JSONArray cardList = new JSONArray();
+        for (Card c : cards) {
+            cardList.put(c.toJson());
+        }
+        return cardList;
+    }
+    
+    @GET
+    @Path("value/{low}/{high}")
+    public JSONArray getCardsByValue(@PathParam("low") BigDecimal low,
+            @PathParam("high") BigDecimal high) throws JSONException {
+        //TODO - validate input
+        System.out.println(low + " - " + high);
+        List<Card> cards = CardFactory.getInstance().getCardsInValueRange(low, high);
+        JSONArray cardList = new JSONArray();
+        for (Card c : cards) {
+            cardList.put(c.toJson());
+        }
+        return cardList;
     }
 }

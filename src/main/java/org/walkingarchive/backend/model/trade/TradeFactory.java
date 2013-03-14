@@ -1,7 +1,10 @@
 package org.walkingarchive.backend.model.trade;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
+import org.walkingarchive.backend.model.security.User;
 
 public class TradeFactory {
     private static TradeFactory instance = new TradeFactory();
@@ -22,6 +25,14 @@ public class TradeFactory {
     }
 
     public Trade getTradeForId(String id) {
+        return null;
+    }
+    
+    public List<Trade> getTradesForUser(User user) {
+        return null;
+    }
+
+    public List<Trade> getTradesForDate(Date date) {
         return null;
     }
 }
