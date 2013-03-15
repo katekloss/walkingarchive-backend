@@ -39,6 +39,11 @@
       <artifactId>postgresql</artifactId>
       <version>9.1-901.jdbc4</version>
     </dependency>
+    <dependency>
+      <groupId>org.mindrot</groupId>
+      <artifactId>jbcrypt</artifactId>
+      <version>0.3m</version>
+    </dependency>
             
   </dependencies>
   <build>
@@ -47,6 +52,7 @@
       <plugin>
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>jetty-maven-plugin</artifactId>
+        <version>8.1.10.v20130312</version>
       </plugin>
     </plugins>
   </build>
