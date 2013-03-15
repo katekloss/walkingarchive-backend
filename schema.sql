@@ -16,6 +16,8 @@ CREATE TYPE type AS ENUM('artifact', 'creature', 'enchantment', 'instant', 'inte
 	'land', 'mana source', 'phenomenon', 'plane', 'planeswalker', 'scheme', 'sorcery',
 	'summon', 'tribal', 'vanguard');
 
+CREATE TYPE tradedirection AS ENUM('giving', 'receiving');
+
 ---
 --- Tables
 ----
@@ -57,6 +59,54 @@ CREATE TABLE CardVectors (
 	FOREIGN KEY (cardid) REFERENCES Cards ON DELETE CASCADE
 );
 
+CREATE TABLE Users (
+	userid serial NOT NULL,
+	name character varying(30) NOT NULL,
+	email character varying(40) NOT NULL,
+	password character(60) NOT NULL,
+
+	PRIMARY KEY (userid)
+);
+
+CREATE TABLE Decks (
+	deckid serial NOT NULL,
+	userid integer NOT NULL,
+	deckname character varying(60) NOT NULL,
+
+	PRIMARY KEY (deckid),
+	FOREIGN KEY (userid) REFERENCES Users ON DELETE CASCADE
+);
+
+CREATE TABLE DeckCards (
+	deckid integer NOT NULL,
+	cardid integer NOT NULL,
+	count smallint NOT NULL,
+
+	PRIMARY KEY (deckid, cardid),
+	FOREIGN KEY (deckid) REFERENCES Decks ON DELETE CASCADE,
+	FOREIGN KEY (cardid) REFERENCES Cards ON DELETE CASCADE
+);
+
+CREATE TABLE Trades (
+	tradeid serial NOT NULL,
+	tradedate date NOT NULL,
+	userid integer NOT NULL,
+	active boolean NOT NULL,
+
+	PRIMARY KEY (tradeid),
+	FOREIGN KEY (userid) REFERENCES Users ON DELETE CASCADE
+);
+
+CREATE TABLE TradeCards (
+	tradeid integer NOT NULL,
+	cardid integer NOT NULL,
+	count smallint NOT NULL,
+	direction tradedirection NOT NULL,
+
+	PRIMARY KEY (tradeid, cardid),
+	FOREIGN KEY (tradeid) REFERENCES Trades ON DELETE CASCADE,
+	FOREIGN KEY (cardid) REFERENCES Cards ON DELETE CASCADE
+);
 
 ---
 --- Views
