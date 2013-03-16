@@ -7,5 +7,6 @@
 		<property name="connection.driver_class">org.postgresql.Driver</property>
 		<property name="connection.username">walkingarchive</property>
 		<property name="connection.password"></property>
+		<property name="temp.use_jdbc_metadata_defaults">false</property>
 	</session-factory>
 </hibernate-configuration>
