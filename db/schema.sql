@@ -22,6 +22,15 @@ CREATE TYPE tradedirection AS ENUM('giving', 'receiving');
 --- Tables
 ----
 
+CREATE TABLE MetaSchemaHistory (
+	Version integer NOT NULL,
+	Name text NOT NULL,
+	Role text NOT NULL,
+	Date timestamp with time zone NOT NULL,
+
+	PRIMARY KEY (Version)
+);
+
 CREATE TABLE Sets (
 	setid serial NOT NULL,
 	setname character varying(50),
