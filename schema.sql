@@ -137,3 +137,17 @@ ORDER BY count DESC;
 ---
 
 CREATE INDEX idx_cardvectors_textvector ON CardVectors USING gin(textvector);
+
+---
+--- Functions
+---
+
+CREATE OR REPLACE FUNCTION PerformSearch(query text)
+	RETURNS TABLE(cardid integer, rank real) AS
+$$
+SELECT cardid, ts_rank_cd(textvector, plainto_tsquery(query)) AS rank
+FROM CardVectors
+WHERE plainto_tsquery(query) @@ textvector
+ORDER BY rank DESC
+$$
+LANGUAGE SQL;
