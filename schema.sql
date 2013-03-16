@@ -151,3 +151,29 @@ WHERE plainto_tsquery(query) @@ textvector
 ORDER BY rank DESC
 $$
 LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION BuildCardVector()
+	RETURNS TRIGGER AS
+$$
+	DECLARE
+		doc text;
+	BEGIN
+		doc := concat_ws(' ', NEW.name, NEW.type, NEW.subtype, NEW.cardtext, NEW.flavortext);
+		UPDATE CardVectors SET textvector = to_tsvector(doc) WHERE cardid = NEW.cardid;
+		IF NOT FOUND THEN
+			INSERT INTO CardVectors (cardid, textvector) VALUES (NEW.cardid, to_tsvector(doc));
+		END IF;
+		RETURN NEW;
+	END;
+$$
+LANGUAGE PLPGSQL;
+
+---
+--- Triggers
+---
+
+CREATE TRIGGER tr_cards_update_cardvectors
+	AFTER INSERT OR UPDATE OF name, type, subtype, cardtext, flavortext
+	ON Cards
+	FOR EACH ROW
+	EXECUTE PROCEDURE BuildCardVector();
