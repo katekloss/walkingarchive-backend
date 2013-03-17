@@ -62,6 +62,7 @@
           <url>http://localhost:8080/manager/text</url>
           <server>walkingarchive</server>
           <path>/walkingarchive-qa</path>
+          <update>true</update>
         </configuration>
       </plugin>
     </plugins>
