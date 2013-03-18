@@ -16,6 +16,7 @@ import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.walkingarchive.backend.model.card.CardFactory;
+import org.walkingarchive.backend.model.card.Deck;
 import org.walkingarchive.backend.model.card.UserCardCollection;
 import org.walkingarchive.backend.model.security.SecurityFactory;
 import org.walkingarchive.backend.model.security.User;
@@ -45,10 +46,34 @@ public class UserCardCollectionController {
 
     @GET
     @Path("user/{userId}")
-    public JSONObject getTradeByUser(@PathParam("userId") String userId) throws JSONException {
+    public JSONObject getCollectionByUser(@PathParam("userId") String userId) throws JSONException {
         //TODO - validate input
         User user = SecurityFactory.getInstance().getUserById(UUID.fromString(userId));
         UserCardCollection collection = CardFactory.getInstance().getUserCollection(user);
         return collection.toJson();
+    }
+
+    @GET
+    @Path("deck/user/{userId}")
+    public JSONArray getAllDecksByUser(@PathParam("userId") String userId) throws JSONException {
+        //TODO - validate input
+        User user = SecurityFactory.getInstance().getUserById(UUID.fromString(userId));
+        List<Deck> decks = CardFactory.getInstance().getAllDecks(user);
+        JSONArray deckList = new JSONArray();
+        for (Deck d : decks) {
+            deckList.put(d.toJson());
+        }
+        
+        return deckList;
+    }
+
+    @GET
+    @Path("deck/user/{userId}/name/{name}")
+    public JSONObject getDeckByNameAndUser(@PathParam("userId") String userId,
+            @PathParam("name") String name) throws JSONException {
+        //TODO - validate input
+        User user = SecurityFactory.getInstance().getUserById(UUID.fromString(userId));
+        Deck deck = CardFactory.getInstance().getDeckByUserAndName(user, name);
+        return deck.toJson();
     }
 }
