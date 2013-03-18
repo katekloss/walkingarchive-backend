@@ -54,6 +54,17 @@
         <artifactId>jetty-maven-plugin</artifactId>
         <version>8.1.10.v20130312</version>
       </plugin>
+      <plugin>
+        <groupId>org.apache.tomcat.maven</groupId>
+        <artifactId>tomcat7-maven-plugin</artifactId>
+        <version>2.0</version>
+        <configuration>
+          <url>http://localhost:8080/manager/text</url>
+          <server>walkingarchive</server>
+          <path>/walkingarchive-qa</path>
+          <update>true</update>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
 </project>
