@@ -122,8 +122,9 @@ CREATE TABLE Prices (
 	setid integer NOT NULL,
 	price money NOT NULL,
 	source text,
+	date date NOT NULL,
 
-	PRIMARY KEY (cardid, setid),
+	PRIMARY KEY (cardid, setid, date),
 	FOREIGN KEY (cardid) REFERENCES Cards ON DELETE CASCADE,
 	FOREIGN KEY (setid) REFERENCES Sets ON DELETE CASCADE
 );
