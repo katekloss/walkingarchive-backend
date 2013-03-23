@@ -3,25 +3,17 @@ package org.walkingarchive.backend.model.card;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-
 public class Card {
-    private UUID id;
+    private Integer id;
     private String name;
     private String type;
+    private String subtype;
     private BigDecimal value;
     private String manacolor;
 
-    public Card() {
-    }
-
-    public Card(String name, String type) {
-        this.name = name;
-        this.type = type;
-    }
+    public Card() {}
     
-    public UUID getId() {
+    public Integer getId() {
         return id;
     }
     
@@ -47,16 +39,5 @@ public class Card {
     
     public void setValue(BigDecimal v) {
         value = v;
-    }
-    
-    public JSONObject toJson() throws JSONException {
-        JSONObject result = new JSONObject();
-        result.put("id", getIdString());
-        result.put("name", getName());
-        result.put("type", getType());
-        result.put("color", getManaColor());
-        result.put("value", getValue());
-        
-        return result;
     }
 }

@@ -1,8 +1,5 @@
 package org.walkingarchive.backend.model.security;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
-
 public class User {
     private String name;
     private String password;
@@ -29,14 +26,6 @@ public class User {
         if (password == this.password) {
             result = true;
         }
-        
-        return result;
-    }
-    
-    public JSONObject toJson() throws JSONException {
-        JSONObject result = new JSONObject();
-        result.put("name", getName());
-        result.put("email", getEmail());
         
         return result;
     }

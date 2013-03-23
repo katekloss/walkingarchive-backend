@@ -1,7 +1,5 @@
 package org.walkingarchive.backend.controller;
 
-import java.util.UUID;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -11,8 +9,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import org.walkingarchive.backend.model.security.SecurityFactory;
 import org.walkingarchive.backend.model.security.User;
 
@@ -34,9 +30,8 @@ public class UserController {
 
     @GET
     @Path("{userId}")
-    public JSONObject getTradeByUser(@PathParam("userId") String userId) throws JSONException {
+    public User getUserById(@PathParam("userId") String userId) {
         //TODO - validate input
-        User user = SecurityFactory.getInstance().getUserById(UUID.fromString(userId));
-        return user.toJson();
+        return SecurityFactory.getInstance().getUserById(Integer.parseInt(userId));
     }
 }

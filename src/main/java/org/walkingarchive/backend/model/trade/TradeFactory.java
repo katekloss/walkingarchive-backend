@@ -2,7 +2,6 @@ package org.walkingarchive.backend.model.trade;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import org.walkingarchive.backend.model.security.User;
 
@@ -20,7 +19,7 @@ public class TradeFactory {
         return null;
     }
     
-    public Trade getTradeForId(UUID id) {
+    public Trade getTradeForId(Integer id) {
         return null;
     }
 

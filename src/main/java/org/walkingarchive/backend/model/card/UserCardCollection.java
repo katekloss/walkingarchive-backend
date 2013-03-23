@@ -2,15 +2,11 @@ package org.walkingarchive.backend.model.card;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import org.walkingarchive.backend.model.security.User;
 
 public class UserCardCollection {
-    private UUID id;
+    private Integer id;
     private List<Card> collection = new ArrayList<Card>();
     private User owner;
     
@@ -23,7 +19,7 @@ public class UserCardCollection {
         this.collection = collection;
     }
 
-    public UUID getId() {
+    public Integer getId() {
         return id;
     }
     
@@ -60,20 +56,6 @@ public class UserCardCollection {
                 result.add(card);
             }
         }
-        
-        return result;
-    }
-
-    public JSONObject toJson() throws JSONException {
-        JSONObject result = new JSONObject();
-        result.put("id", getIdString());
-        result.put("owner", getOwner().toJson());
-
-        JSONArray collection = new JSONArray();
-        for(Card card : getCollection()) {
-            collection.put(card.toJson());
-        }
-        result.put("collection", collection);
         
         return result;
     }

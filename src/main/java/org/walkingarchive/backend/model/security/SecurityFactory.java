@@ -1,7 +1,5 @@
 package org.walkingarchive.backend.model.security;
 
-import java.util.UUID;
-
 public class SecurityFactory {
     private static SecurityFactory instance = new SecurityFactory();
 
@@ -16,7 +14,7 @@ public class SecurityFactory {
     // USER
     //----------------------------------------------------------------------------------------------
     
-    public User getUserById(UUID id) {
+    public User getUserById(Integer id) {
         return null;
     }
     

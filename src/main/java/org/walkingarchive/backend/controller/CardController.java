@@ -2,20 +2,18 @@ package org.walkingarchive.backend.controller;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.MediaType;
 
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONException;
-import org.codehaus.jettison.json.JSONObject;
 import org.walkingarchive.backend.model.card.Card;
 import org.walkingarchive.backend.model.card.CardFactory;
 
@@ -31,68 +29,42 @@ public class CardController {
     protected UriInfo uriInfo;
     
     @GET
-    public JSONArray getAll() throws JSONException {
-        //validate card input
-        List<Card> cards = CardFactory.getInstance().getAllCards();
-        JSONArray cardList = new JSONArray();
-        for (Card c : cards) {
-            cardList.put(c.toJson());
-        }
-        return cardList;
-    }
-    
-    @GET
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("id/{card}")
-    public JSONObject getCardById(@PathParam("card") String card) throws JSONException {
-        UUID cardId = UUID.fromString(card);
-        Card c = CardFactory.getInstance().getCard(cardId);
-        return c.toJson();
+    public Card getCardById(@PathParam("card") String card) {
+        Integer cardId = Integer.parseInt(card);
+        return CardFactory.getInstance().getCard(cardId);
     }
     
     @GET
     @Path("name/{card}")
-    public JSONArray getCardsByName(@PathParam("card") String card) throws JSONException {
+    public List<Card> getCardsByName(@PathParam("card") String card) {
         //TODO - validate card input
-        List<Card> cards = CardFactory.getInstance().getCardsByName(card);
-        JSONArray cardList = new JSONArray();
-        for (Card c : cards) {
-            cardList.put(c.toJson());
-        }
-        return cardList;
+        return CardFactory.getInstance().getCardsByName(card);
     }
     
     @GET
     @Path("name/{card}/version/{version}")
-    public JSONObject getCardByNameAndVersion(@PathParam("card") String card, 
-            @PathParam("version") String version) throws JSONException {
+    public Card getCardByNameAndVersion(@PathParam("card") String card, 
+            @PathParam("version") String version) {
         //TODO - validate input
         Card c = CardFactory.getInstance().getCardByNameAndVersion(card, version);
-        return c.toJson();
+        return c;
     }
     
     @GET
     @Path("type/{type}")
-    public JSONArray getCardsByType(@PathParam("type") String type) throws JSONException {
+    public List<Card> getCardsByType(@PathParam("type") String type) {
         //TODO - validate input
-        List<Card> cards = CardFactory.getInstance().getCardsByType(type);
-        JSONArray cardList = new JSONArray();
-        for (Card c : cards) {
-            cardList.put(c.toJson());
-        }
-        return cardList;
+        return CardFactory.getInstance().getCardsByType(type);
     }
     
     @GET
     @Path("value/{low}/{high}")
-    public JSONArray getCardsByValue(@PathParam("low") BigDecimal low,
-            @PathParam("high") BigDecimal high) throws JSONException {
+    public List<Card> getCardsByValue(@PathParam("low") BigDecimal low,
+            @PathParam("high") BigDecimal high) {
         //TODO - validate input
         System.out.println(low + " - " + high);
-        List<Card> cards = CardFactory.getInstance().getCardsInValueRange(low, high);
-        JSONArray cardList = new JSONArray();
-        for (Card c : cards) {
-            cardList.put(c.toJson());
-        }
-        return cardList;
+        return CardFactory.getInstance().getCardsInValueRange(low, high);
     }
 }
