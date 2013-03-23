@@ -2,10 +2,11 @@ package org.walkingarchive.backend.model.card;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 
 import org.walkingarchive.backend.model.security.User;
+import org.walkingarchive.backend.DbHelper;
 
+import org.hibernate.Session;
 
 public class CardFactory {
     private static CardFactory instance = new CardFactory();
@@ -30,8 +31,9 @@ public class CardFactory {
         return null;
     }
     
-    public Card getCard(UUID cardId) {
-        return null;
+    public Card getCard(int cardId) {
+        Session session = DbHelper.getSession();
+        return (Card) session.get(Card.class, cardId);
     }
     
     public Card getCardByNameAndVersion(String name, String Version) {
