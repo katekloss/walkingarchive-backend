@@ -28,7 +28,11 @@ public class CardFactory {
     }
     
     public List<Card> getCardsByName(String name) {
-        return null;
+        Session session = DbHelper.getSession();
+        List cards = session.createQuery("from Card where lower(name) like :name")
+            .setParameter("name", name)
+            .list();
+        return cards;
     }
     
     public Card getCard(int cardId) {
