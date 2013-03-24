@@ -106,17 +106,21 @@ CREATE TABLE Trades (
 );
 
 CREATE TABLE TradeCardsGiving (
+	id serial NOT NULL,
 	tradeid integer NOT NULL,
 	cardid integer NOT NULL,
 
+	PRIMARY KEY (id),
 	FOREIGN KEY (tradeid) REFERENCES Trades ON DELETE CASCADE,
 	FOREIGN KEY (cardid) REFERENCES Cards ON DELETE CASCADE
 );
 
 CREATE TABLE TradeCardsReceiving (
+	id serial NOT NULL,
 	tradeid integer NOT NULL,
 	cardid integer NOT NULL,
 
+	PRIMARY KEY (id),
 	FOREIGN KEY (tradeid) REFERENCES Trades ON DELETE CASCADE,
 	FOREIGN KEY (cardid) REFERENCES Cards ON DELETE CASCADE
 );
