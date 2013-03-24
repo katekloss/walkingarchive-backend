@@ -106,13 +106,18 @@ CREATE TABLE Trades (
 	FOREIGN KEY (userid) REFERENCES Users ON DELETE CASCADE
 );
 
-CREATE TABLE TradeCards (
+CREATE TABLE TradeCardsGiving (
 	tradeid integer NOT NULL,
 	cardid integer NOT NULL,
-	count smallint NOT NULL,
-	direction tradedirection NOT NULL,
 
-	PRIMARY KEY (tradeid, cardid),
+	FOREIGN KEY (tradeid) REFERENCES Trades ON DELETE CASCADE,
+	FOREIGN KEY (cardid) REFERENCES Cards ON DELETE CASCADE
+);
+
+CREATE TABLE TradeCardsReceiving (
+	tradeid integer NOT NULL,
+	cardid integer NOT NULL,
+
 	FOREIGN KEY (tradeid) REFERENCES Trades ON DELETE CASCADE,
 	FOREIGN KEY (cardid) REFERENCES Cards ON DELETE CASCADE
 );
