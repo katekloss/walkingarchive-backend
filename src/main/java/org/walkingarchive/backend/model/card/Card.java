@@ -8,6 +8,8 @@ public class Card {
     private String name;
     private String type;
     private String subtype;
+    private String text;
+    private String flavortext;
     private BigDecimal value;
     private String manacolor;
 
@@ -49,6 +51,22 @@ public class Card {
         this.subtype = value;
     }
 
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String value) {
+        this.text = value;
+    }
+
+    public String getFlavortext() {
+        return flavortext;
+    }
+
+    public void setFlavortext(String value) {
+        this.flavortext = value;
+    }
+    
     public String getManaColor() {
         return manacolor;
     }
