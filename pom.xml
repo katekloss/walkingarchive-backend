@@ -44,10 +44,44 @@
       <artifactId>jbcrypt</artifactId>
       <version>0.3m</version>
     </dependency>
-            
   </dependencies>
+
+  <profiles>
+    <profile>
+      <id>dev</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <resources>
+          <resource>
+            <directory>src/main/resources/dev</directory>
+          </resource>
+        </resources>
+      </build>
+    </profile>
+    <profile>
+      <id>prod</id>
+      <build>
+        <resources>
+          <resource>
+            <directory>src/main/resources/prod</directory>
+          </resource>
+        </resources>
+      </build>
+    </profile>
+  </profiles>
+  
   <build>
     <finalName>walkingarchive-backend</finalName>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>*.*</include>
+        </includes>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <groupId>org.mortbay.jetty</groupId>

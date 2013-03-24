@@ -8,7 +8,5 @@
 		<property name="connection.username">walkingarchive</property>
 		<property name="connection.password"></property>
 		<property name="temp.use_jdbc_metadata_defaults">false</property>
-		
-		<mapping resource="Card.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>
