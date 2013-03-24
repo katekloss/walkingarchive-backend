@@ -89,7 +89,6 @@ CREATE TABLE Decks (
 CREATE TABLE DeckCards (
 	deckid integer NOT NULL,
 	cardid integer NOT NULL,
-	count smallint NOT NULL,
 
 	PRIMARY KEY (deckid, cardid),
 	FOREIGN KEY (deckid) REFERENCES Decks ON DELETE CASCADE,
