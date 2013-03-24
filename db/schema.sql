@@ -42,7 +42,7 @@ CREATE TABLE Cards (
 	cardid serial NOT NULL,
 	name character varying(150) NOT NULL,
 	mana hstore NOT NULL,
-	type type NOT NULL,
+	type character varying(12) NOT NULL,
 	subtype character varying(40),
 	cardtext text,
 	flavortext text,
