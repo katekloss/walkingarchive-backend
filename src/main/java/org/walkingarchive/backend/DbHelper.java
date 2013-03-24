@@ -9,10 +9,8 @@ public class DbHelper
 {
 	public static Session getSession()
 	{
-		Configuration config = new Configuration()
-			.addResource("mappings.xml")
-			.configure();
-
+		Configuration config = new Configuration();
+		config.configure();
 		ServiceRegistry registry = new ServiceRegistryBuilder()
 			.applySettings(config.getProperties())
 			.buildServiceRegistry();
