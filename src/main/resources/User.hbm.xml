@@ -2,17 +2,17 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-    <class name="org.walkingarchive.backend.model.card.Card" table="Cards">
-        <id name="id" type="int" column="cardid" />
+    <class name="org.walkingarchive.backend.model.security.User" table="Users">
+        <id name="id" type="int" column="userid" />
 
         <property name="name">
             <column name="name" />
         </property>
-        <property name="type">
-            <column name="type" />
+        <property name="password">
+            <column name="password" />
         </property>
-        <property name="subtype">
-            <column name="subtype" />
+        <property name="email">
+            <column name="email" />
         </property>
     </class>
 </hibernate-mapping>

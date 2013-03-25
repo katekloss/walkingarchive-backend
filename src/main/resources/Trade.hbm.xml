@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="org.walkingarchive.backend.model.trade.Trade" table="Trades">
+        <id name="id" type="int" column="tradeid" />
+
+        <property name="created" type="date" column="tradedate" />
+        <many-to-one name="owner" class="org.walkingarchive.backend.model.security.User" 
+            column="userid" not-null="true" cascade="all" unique="true" />
+        <list name="receivingCards" table="TradeCardsReceiving"
+                inverse="true" lazy="true" fetch="select">
+            <key column="tradeid" />
+            <list-index column="id" />
+            <many-to-many class="org.walkingarchive.backend.model.card.Card" 
+                column="cardid" unique="true" />
+        </list>
+        <list name="givingCards" table="TradeCardsGiving"
+                inverse="true" lazy="true" fetch="select">
+            <key column="tradeid" />
+            <list-index column="id" />
+            <many-to-many class="org.walkingarchive.backend.model.card.Card" 
+                column="cardid" unique="true" />
+        </list>
+    </class>
+</hibernate-mapping>
