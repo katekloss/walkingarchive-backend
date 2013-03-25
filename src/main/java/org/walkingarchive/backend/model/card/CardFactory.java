@@ -65,8 +65,12 @@ public class CardFactory {
         return null;
     }
     
-    public Deck getDeck(User user) {
-        return null;
+    public List<Deck> getDecks(User user) {
+        Session session = DbHelper.getSession();
+        List decks = session.createQuery("from Deck where userid like :userid")
+            .setParameter("userid", user.getId())
+            .list();
+        return decks;
     }
     
     public Deck getDeckByType(User user, String type) {

@@ -1,5 +1,7 @@
 package org.walkingarchive.backend.controller;
 
+import java.util.List;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,9 +29,9 @@ public class DeckController {
 
     @GET
     @Path("user/{userId}")
-    public Deck getTradeByUser(@PathParam("userId") String userId) {
+    public List<Deck> getDecksByUser(@PathParam("userId") String userId) {
         //TODO - validate input
         User user = SecurityFactory.getInstance().getUserById(Integer.parseInt(userId));
-        return CardFactory.getInstance().getDeck(user);
+        return CardFactory.getInstance().getDecks(user);
     }
 }
