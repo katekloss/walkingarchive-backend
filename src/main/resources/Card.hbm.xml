@@ -3,7 +3,9 @@
 
 <hibernate-mapping>
     <class name="org.walkingarchive.backend.model.card.Card" table="Cards">
-        <id name="id" type="int" column="cardid" />
+        <id name="id" type="java.lang.Integer" column="cardid">
+            <generator class="identity" />
+        </id>
 
         <property name="name">
             <column name="name" />

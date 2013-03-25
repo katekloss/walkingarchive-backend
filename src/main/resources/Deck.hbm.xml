@@ -3,7 +3,9 @@
 
 <hibernate-mapping>
     <class name="org.walkingarchive.backend.model.card.Deck" table="Decks">
-        <id name="id" type="int" column="deckid" />
+        <id name="id" type="java.lang.Integer" column="deckid">
+            <generator class="identity" />
+        </id>
 
         <property name="name" column="deckname" />
         <many-to-one name="owner" class="org.walkingarchive.backend.model.security.User" 

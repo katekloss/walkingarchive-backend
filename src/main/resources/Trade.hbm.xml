@@ -3,7 +3,9 @@
 
 <hibernate-mapping>
     <class name="org.walkingarchive.backend.model.trade.Trade" table="Trades">
-        <id name="id" type="int" column="tradeid" />
+        <id name="id" type="java.lang.Integer" column="tradeid">
+            <generator class="identity" />
+        </id>
 
         <property name="created" type="date" column="tradedate" />
         <many-to-one name="owner" class="org.walkingarchive.backend.model.security.User" 
