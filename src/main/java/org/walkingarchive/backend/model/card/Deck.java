@@ -11,6 +11,8 @@ public class Deck {
     private User owner;
     private String name;
     
+    public Deck() {}
+    
     public Deck(User owner, String name) {
         this.owner = owner;
         this.name = name;

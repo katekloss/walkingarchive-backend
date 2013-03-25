@@ -15,8 +15,7 @@ public class Trade {
     private List<Card> givingCards = new ArrayList<Card>();
     private boolean active;
     
-    public Trade() {
-    }
+    public Trade() {}
     
     public Trade(User user, List<Card> a, List<Card> b) {
         created = new Date();
