@@ -67,7 +67,7 @@ public class CardFactory {
     
     public List<Deck> getDecks(User user) {
         Session session = DbHelper.getSession();
-        List decks = session.createQuery("from Deck where userid like :userid")
+        List decks = session.createQuery("from Deck where userid = :userid")
             .setParameter("userid", user.getId())
             .list();
         return decks;
