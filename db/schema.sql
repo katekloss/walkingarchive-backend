@@ -42,7 +42,7 @@ CREATE TABLE Cards (
 	cardid serial NOT NULL,
 	name character varying(150) NOT NULL,
 	mana hstore NOT NULL,
-	type type NOT NULL,
+	type character varying(12) NOT NULL,
 	subtype character varying(40),
 	cardtext text,
 	flavortext text,
@@ -106,17 +106,21 @@ CREATE TABLE Trades (
 );
 
 CREATE TABLE TradeCardsGiving (
+	id serial NOT NULL,
 	tradeid integer NOT NULL,
 	cardid integer NOT NULL,
 
+	PRIMARY KEY (id),
 	FOREIGN KEY (tradeid) REFERENCES Trades ON DELETE CASCADE,
 	FOREIGN KEY (cardid) REFERENCES Cards ON DELETE CASCADE
 );
 
 CREATE TABLE TradeCardsReceiving (
+	id serial NOT NULL,
 	tradeid integer NOT NULL,
 	cardid integer NOT NULL,
 
+	PRIMARY KEY (id),
 	FOREIGN KEY (tradeid) REFERENCES Trades ON DELETE CASCADE,
 	FOREIGN KEY (cardid) REFERENCES Cards ON DELETE CASCADE
 );

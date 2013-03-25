@@ -14,5 +14,11 @@
         <property name="subtype">
             <column name="subtype" />
         </property>
+        <property name="text">
+            <column name="cardtext" />
+        </property>
+        <property name="flavortext">
+            <column name="flavortext" />
+        </property>
     </class>
 </hibernate-mapping>

@@ -7,6 +7,7 @@ import org.walkingarchive.backend.model.security.User;
 import org.walkingarchive.backend.DbHelper;
 
 import org.hibernate.Session;
+import org.hibernate.type.CustomType;
 
 public class CardFactory {
     private static CardFactory instance = new CardFactory();
@@ -24,11 +25,19 @@ public class CardFactory {
     //----------------------------------------------------------------------------------------------
     
     public List<Card> getCardsByType(String type) {
-        return null;
+        Session session = DbHelper.getSession();
+        List cards = session.createQuery("from Card where type = :type")
+            .setParameter("type", type)
+            .list();
+        return cards;
     }
     
     public List<Card> getCardsByName(String name) {
-        return null;
+        Session session = DbHelper.getSession();
+        List cards = session.createQuery("from Card where lower(name) like :name")
+            .setParameter("name", name)
+            .list();
+        return cards;
     }
     
     public Card getCard(int cardId) {

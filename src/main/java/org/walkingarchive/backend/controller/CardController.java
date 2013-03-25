@@ -37,6 +37,7 @@ public class CardController {
     }
     
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("name/{card}")
     public List<Card> getCardsByName(@PathParam("card") String card) {
         //TODO - validate card input
@@ -44,6 +45,7 @@ public class CardController {
     }
     
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("name/{card}/version/{version}")
     public Card getCardByNameAndVersion(@PathParam("card") String card, 
             @PathParam("version") String version) {
@@ -53,6 +55,7 @@ public class CardController {
     }
     
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("type/{type}")
     public List<Card> getCardsByType(@PathParam("type") String type) {
         //TODO - validate input
@@ -60,6 +63,7 @@ public class CardController {
     }
     
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("value/{low}/{high}")
     public List<Card> getCardsByValue(@PathParam("low") BigDecimal low,
             @PathParam("high") BigDecimal high) {
