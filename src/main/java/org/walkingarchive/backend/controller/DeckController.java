@@ -1,7 +1,5 @@
 package org.walkingarchive.backend.controller;
 
-import java.util.List;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,12 +10,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
 import org.walkingarchive.backend.model.card.CardFactory;
-import org.walkingarchive.backend.model.card.UserCardCollection;
+import org.walkingarchive.backend.model.card.Deck;
 import org.walkingarchive.backend.model.security.SecurityFactory;
 import org.walkingarchive.backend.model.security.User;
 
-@Path("/collection/")
-public class UserCardCollectionController {
+@Path("/deck/")
+public class DeckController {
     @Context
     protected ServletContext context;
     @Context
@@ -29,9 +27,9 @@ public class UserCardCollectionController {
 
     @GET
     @Path("user/{userId}")
-    public UserCardCollection getTradeByUser(@PathParam("userId") String userId) {
+    public Deck getTradeByUser(@PathParam("userId") String userId) {
         //TODO - validate input
         User user = SecurityFactory.getInstance().getUserById(Integer.parseInt(userId));
-        return CardFactory.getInstance().getUserCollection(user);
+        return CardFactory.getInstance().getDeck(user);
     }
 }

@@ -1,7 +1,6 @@
 package org.walkingarchive.backend.model.card;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 public class Card {
     private Integer id;

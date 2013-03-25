@@ -5,16 +5,18 @@ import java.util.List;
 
 import org.walkingarchive.backend.model.security.User;
 
-public class UserCardCollection {
+public class Deck {
     private Integer id;
     private List<Card> collection = new ArrayList<Card>();
     private User owner;
+    private String name;
     
-    public UserCardCollection(User owner) {
+    public Deck(User owner, String name) {
         this.owner = owner;
+        this.name = name;
     }
 
-    public UserCardCollection(User owner, List<Card> collection) {
+    public Deck(User owner, List<Card> collection) {
         this.owner = owner;
         this.collection = collection;
     }
@@ -48,6 +50,26 @@ public class UserCardCollection {
         return collection.contains(card);
     }
     
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setCollection(List<Card> collection) {
+        this.collection = collection;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
     public List<Card> getCardsWithType(String type) {
         List<Card> result = new ArrayList<Card>();
         

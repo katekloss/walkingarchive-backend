@@ -33,6 +33,38 @@ public class Trade {
         return id;
     }
     
+    public Date getCreated() {
+        return created;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
+    }
+
+    public List<Card> getReceivingCards() {
+        return receivingCards;
+    }
+
+    public void setReceivingCards(List<Card> receivingCards) {
+        this.receivingCards = receivingCards;
+    }
+
+    public List<Card> getGivingCards() {
+        return givingCards;
+    }
+
+    public void setGivingCards(List<Card> givingCards) {
+        this.givingCards = givingCards;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
     public String getIdString() {
         return id.toString();
     }
@@ -43,14 +75,6 @@ public class Trade {
     
     public void addCardToGiving(Card card) {
         givingCards.add(card);
-    }
-    
-    public List<Card> getCardsReceiving() {
-        return receivingCards;
-    }
-    
-    public List<Card> getCardsGiving() {
-        return givingCards;
     }
     
     public User getOwner() {

@@ -52,15 +52,15 @@ public class CardFactory {
     // COLLECTION
     //----------------------------------------------------------------------------------------------
     
-    public List<UserCardCollection> getAllUserCollections() {
+    public List<Deck> getAllDecks() {
         return null;
     }
     
-    public UserCardCollection getUserCollection(User user) {
+    public Deck getDeck(User user) {
         return null;
     }
     
-    public UserCardCollection getUserCollectionByType(User user, String type) {
+    public Deck getDeckByType(User user, String type) {
         return null;
     }
 }
