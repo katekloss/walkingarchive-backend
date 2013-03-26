@@ -34,7 +34,7 @@ public class CardFactory {
     
     public List<Card> getCardsByName(String name) {
         Session session = DbHelper.getSession();
-        List cards = session.createQuery("from Card where lower(name) like lower(:name)")
+        List cards = session.createQuery("from Card where lower(name) like concat(lower(:name),'%')")
             .setParameter("name", name)
             .list();
         return cards;
