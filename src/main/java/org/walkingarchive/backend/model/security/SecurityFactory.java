@@ -23,22 +23,28 @@ public class SecurityFactory {
     public User getUserById(Integer id) {
         Session session = DbHelper.getSession();
         User user = (User) session.get(User.class, id);
+        session.close();
         return user;
     }
     
     public User getUserByName(String name) {
         Session session = DbHelper.getSession();
-        User user = (User) session.createQuery("from Card where name = :name")
+        User user = (User) session.createQuery("from User where name = :name")
             .setParameter("name", name)
             .uniqueResult();
+        session.close();
         return user;
     }
     
     public User getUserByEmail(String email) {
-        return null;
+        Session session = DbHelper.getSession();
+        User user = (User) session.createQuery("from User where lower(email) = lower(:email)")
+            .setParameter("email", email)
+            .uniqueResult();
+        return user;
     }
     
-    public User addUser(User user) throws Exception {
+    public User createUser(User user) throws Exception {
         Session session = DbHelper.getSession();
         Transaction tx = null;
         try {
@@ -50,6 +56,9 @@ public class SecurityFactory {
         catch (Exception e) {
             if (tx!=null) tx.rollback();
             throw e;
+        }
+        finally {
+            session.close();
         }
 
         return user;

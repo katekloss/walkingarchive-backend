@@ -29,6 +29,7 @@ public class CardFactory {
         List cards = session.createQuery("from Card where type = :type")
             .setParameter("type", type)
             .list();
+        session.close();
         return cards;
     }
     
@@ -37,12 +38,15 @@ public class CardFactory {
         List cards = session.createQuery("from Card where lower(name) like lower(:name)")
             .setParameter("name", name)
             .list();
+        session.close();
         return cards;
     }
     
     public Card getCard(int cardId) {
         Session session = DbHelper.getSession();
-        return (Card) session.get(Card.class, cardId);
+        Card card = (Card) session.get(Card.class, cardId);
+        session.close();
+        return card;
     }
     
     public Card getCardByNameAndVersion(String name, String Version) {
@@ -70,6 +74,7 @@ public class CardFactory {
         List decks = session.createQuery("from Deck where userid = :userid")
             .setParameter("userid", user.getId())
             .list();
+        session.close();
         return decks;
     }
     

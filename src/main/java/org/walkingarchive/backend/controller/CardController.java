@@ -59,7 +59,8 @@ public class CardController {
     @Path("type/{type}")
     public List<Card> getCardsByType(@PathParam("type") String type) {
         //TODO - validate input
-        return CardFactory.getInstance().getCardsByType(type);
+//        return CardFactory.getInstance().getCardsByType(type);
+        throw new RuntimeException("getCardsByType is unimplemented.");
     }
     
     @GET
@@ -68,7 +69,8 @@ public class CardController {
     public List<Card> getCardsByValue(@PathParam("low") BigDecimal low,
             @PathParam("high") BigDecimal high) {
         //TODO - validate input
-        System.out.println(low + " - " + high);
-        return CardFactory.getInstance().getCardsInValueRange(low, high);
+//        System.out.println(low + " - " + high);
+//        return CardFactory.getInstance().getCardsInValueRange(low, high);
+        throw new RuntimeException("getCardsByValue is unimplemented");
     }
 }
