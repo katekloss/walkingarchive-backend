@@ -11,7 +11,7 @@
         <many-to-one name="owner" class="org.walkingarchive.backend.model.security.User" 
             column="userid" not-null="true" cascade="all" unique="true" />
         <list name="collection" table="DeckCards"
-                inverse="true" lazy="true" fetch="select">
+                inverse="false" lazy="false" fetch="join">
             <key column="deckid" />
             <list-index column="id" />
             <many-to-many class="org.walkingarchive.backend.model.card.Card" 

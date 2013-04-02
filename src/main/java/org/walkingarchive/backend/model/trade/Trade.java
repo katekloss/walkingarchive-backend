@@ -17,7 +17,7 @@ public class Trade {
     
     public Trade() {}
     
-    public Trade(User user, List<Card> a, List<Card> b) {
+    public Trade(User user, List<Card> a, List<Card> b, boolean active) {
         created = new Date();
         owner = user;
         for (Card ca : a) {
@@ -26,6 +26,7 @@ public class Trade {
         for (Card cb : b) {
             givingCards.add(cb);
         }
+        this.active = active;
     }
     
     public Integer getId() {

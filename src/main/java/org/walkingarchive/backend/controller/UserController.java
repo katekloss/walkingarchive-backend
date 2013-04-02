@@ -65,6 +65,14 @@ public class UserController {
         return createCensoredUser(user);
     }
     
+    @GET
+    @Path("email/{email}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public JSONObject getUserByEmail(@PathParam("email") String email) throws JSONException {
+        //TODO - validate input
+        throw new RuntimeException("getUserByEmail is unimplemented.");
+    }
+    
     @PUT
     @Path("add")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -74,9 +82,7 @@ public class UserController {
                 jsonObject.get("password").toString(), 
                 jsonObject.get("email").toString());
         
-        user = SecurityFactory.getInstance().addUser(user);
-        
-        System.out.println("Created user " + user.getId());
+        user = SecurityFactory.getInstance().createUser(user);
         
         return Response.ok(user, MediaType.APPLICATION_JSON).build();
     }
