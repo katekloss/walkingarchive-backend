@@ -12,6 +12,7 @@ public class Card {
     private BigDecimal value;
     private String manacolor;
     private java.util.Set<Set> sets;
+    private java.util.Set<Price> prices;
 
     public Card() {}
     
@@ -86,5 +87,14 @@ public class Card {
     public void setSets(java.util.Set<Set> value)
     {
         sets = value;
+    }
+
+    public java.util.Set<Price> getPrices() {
+        return prices;
+    }
+
+    public void setPrices(java.util.Set<Price> value)
+    {
+        prices = value;
     }
 }

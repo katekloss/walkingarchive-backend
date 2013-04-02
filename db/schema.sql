@@ -125,15 +125,22 @@ CREATE TABLE TradeCardsReceiving (
 	FOREIGN KEY (cardid) REFERENCES Cards ON DELETE CASCADE
 );
 
-CREATE TABLE Prices (
+CREATE TABLE CardPrices (
 	cardid integer NOT NULL,
+	priceid integer NOT NULL,
+
+	FOREIGN KEY (cardid) REFERENCES Cards ON DELETE CASCADE,
+	FOREIGN KEY (priceid) REFERENCES Prices ON DELETE CASCADE
+);
+
+CREATE TABLE Prices (
+	priceid serial NOT NULL,
 	setid integer NOT NULL,
 	price money NOT NULL,
 	source text,
 	date date NOT NULL,
 
-	PRIMARY KEY (cardid, setid, date),
-	FOREIGN KEY (cardid) REFERENCES Cards ON DELETE CASCADE,
+	PRIMARY KEY (priceid),
 	FOREIGN KEY (setid) REFERENCES Sets ON DELETE CASCADE
 );
 

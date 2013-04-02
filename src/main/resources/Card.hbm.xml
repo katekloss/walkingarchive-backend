@@ -27,5 +27,10 @@
             <key column="cardId" />
             <many-to-many column="setId" class="org.walkingarchive.backend.model.card.Set" />
         </set>
+
+        <set name="prices" table="CardPrices" inverse="true">
+            <key column="cardid" />
+            <many-to-many class="org.walkingarchive.backend.model.card.Price" column="priceid" />
+        </set>
     </class>
 </hibernate-mapping>

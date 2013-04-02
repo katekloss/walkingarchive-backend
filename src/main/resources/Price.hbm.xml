@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.walkingarchive.backend.model.card.Price" table="Prices">
+		<id name="id" column="priceid">
+			<generator class="native" />
+		</id>
+
+		<one-to-one name="set" class="org.walkingarchive.backend.model.card.Set" />
+
+		<property name="price">
+			<column name="price" />
+		</property>
+		<property name="source">
+			<column name="source" />
+		</property>
+		<property name="date">
+			<column name="date" />
+		</property>
+	</class>
+</hibernate-mapping>

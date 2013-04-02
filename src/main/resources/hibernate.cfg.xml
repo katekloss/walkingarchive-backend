@@ -14,5 +14,6 @@
         <mapping resource="User.hbm.xml" />
         <mapping resource="Deck.hbm.xml" />
         <mapping resource="Set.hbm.xml" />
+        <mapping resource="Price.hbm.xml" />
     </session-factory>
 </hibernate-configuration>
