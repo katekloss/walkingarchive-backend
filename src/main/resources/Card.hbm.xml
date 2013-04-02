@@ -22,5 +22,10 @@
         <property name="flavortext">
             <column name="flavortext" />
         </property>
+
+        <set name="sets" table="CardSets">
+            <key column="cardId" />
+            <many-to-many column="setId" class="org.walkingarchive.backend.model.card.Set" />
+        </set>
     </class>
 </hibernate-mapping>

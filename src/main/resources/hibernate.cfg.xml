@@ -13,5 +13,6 @@
         <mapping resource="Trade.hbm.xml" />
         <mapping resource="User.hbm.xml" />
         <mapping resource="Deck.hbm.xml" />
+        <mapping resource="Set.hbm.xml" />
     </session-factory>
 </hibernate-configuration>

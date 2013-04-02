@@ -11,6 +11,7 @@ public class Card {
     private String flavortext;
     private BigDecimal value;
     private String manacolor;
+    private java.util.Set<Set> sets;
 
     public Card() {}
     
@@ -76,5 +77,14 @@ public class Card {
     
     public void setValue(BigDecimal v) {
         value = v;
+    }
+
+    public java.util.Set<Set> getSets() {
+        return sets;
+    }
+
+    public void setSets(java.util.Set<Set> value)
+    {
+        sets = value;
     }
 }
