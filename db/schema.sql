@@ -173,6 +173,8 @@ ORDER BY count DESC;
 ---
 
 CREATE INDEX idx_cardvectors_textvector ON CardVectors USING gin(textvector);
+CREATE INDEX idx_cards_name ON Cards (name);
+CREATE INDEX idx_cards_type ON Cards (type);
 
 ---
 --- Functions
