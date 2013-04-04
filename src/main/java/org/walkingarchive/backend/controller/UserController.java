@@ -12,6 +12,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.codehaus.jettison.json.JSONException;
@@ -32,17 +33,24 @@ public class UserController {
 
     @GET
     public Response getAll() {
-        throw new RuntimeException("You do not have permissions to access all users.");
+        return Response.status(Status.FORBIDDEN).build();
     }
 
     @GET
     @Path("id/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public JSONObject getUserById(@PathParam("userId") String userId) throws JSONException {
+    public Response getUserById(@PathParam("userId") String userId) throws JSONException {
         //TODO - validate input
+        Response result;
         User user = SecurityFactory.getInstance().getUserById(Integer.parseInt(userId));
+        if(user != null) {
+            result = Response.ok(createCensoredUser(user), MediaType.APPLICATION_JSON).build();
+        }
+        else {
+            result = Response.status(Status.NOT_FOUND).build();
+        }
         
-        return createCensoredUser(user);
+        return result;
     }
     
     private JSONObject createCensoredUser(User user) throws JSONException {
@@ -58,11 +66,19 @@ public class UserController {
     @GET
     @Path("name/{name}")
     @Produces(MediaType.APPLICATION_JSON)
-    public JSONObject getUserByName(@PathParam("name") String name) throws JSONException {
+    public Response getUserByName(@PathParam("name") String name) throws JSONException {
         //TODO - validate input
+        Response result;
         User user = SecurityFactory.getInstance().getUserByName(name);
         
-        return createCensoredUser(user);
+        if(user != null) {
+            result = Response.ok(createCensoredUser(user), MediaType.APPLICATION_JSON).build();
+        }
+        else {
+            result = Response.status(Status.NOT_FOUND).build();
+        }
+        
+        return result;
     }
     
     @GET

@@ -11,6 +11,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.MediaType;
 
@@ -31,17 +33,32 @@ public class CardController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("id/{card}")
-    public Card getCardById(@PathParam("card") String card) {
+    public Response getCardById(@PathParam("card") String card) {
+        Response result;
         Integer cardId = Integer.parseInt(card);
-        return CardFactory.getInstance().getCard(cardId);
+        Card c = CardFactory.getInstance().getCard(cardId);
+        if(c != null) {
+            result = Response.ok(c, MediaType.APPLICATION_JSON).build();
+        }
+        else {
+            result = Response.status(Status.NOT_FOUND).build();
+        }
+        return result;
     }
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("name/{card}")
-    public List<Card> getCardsByName(@PathParam("card") String card) {
-        //TODO - validate card input
-        return CardFactory.getInstance().getCardsByName(card);
+    public Response getCardsByName(@PathParam("card") String card) {
+        Response result;
+        List<Card> c = CardFactory.getInstance().getCardsByName(card);
+        if(c != null) {
+            result = Response.ok(c, MediaType.APPLICATION_JSON).build();
+        }
+        else {
+            result = Response.status(Status.NOT_FOUND).build();
+        }
+        return result;
     }
     
     @GET
