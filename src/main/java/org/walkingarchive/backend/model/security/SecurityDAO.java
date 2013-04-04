@@ -6,15 +6,15 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.walkingarchive.backend.DbHelper;
 
-public class SecurityFactory {
-    private static SecurityFactory instance = new SecurityFactory();
+public class SecurityDAO {
+    private static SecurityDAO instance = new SecurityDAO();
 
     //Singleton
-    public static SecurityFactory getInstance() {
+    public static SecurityDAO getInstance() {
         return instance;
     }
     
-    private SecurityFactory() {}
+    private SecurityDAO() {}
     
     //----------------------------------------------------------------------------------------------
     // USER
@@ -41,6 +41,7 @@ public class SecurityFactory {
         User user = (User) session.createQuery("from User where lower(email) = lower(:email)")
             .setParameter("email", email)
             .uniqueResult();
+        session.close();
         return user;
     }
     

@@ -11,9 +11,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 
-import org.walkingarchive.backend.model.card.CardFactory;
+import org.walkingarchive.backend.model.card.CardDAO;
 import org.walkingarchive.backend.model.card.Deck;
-import org.walkingarchive.backend.model.security.SecurityFactory;
+import org.walkingarchive.backend.model.security.SecurityDAO;
 import org.walkingarchive.backend.model.security.User;
 
 @Path("/deck/")
@@ -31,7 +31,7 @@ public class DeckController {
     @Path("user/{userId}")
     public List<Deck> getDecksByUser(@PathParam("userId") String userId) {
         //TODO - validate input
-        User user = SecurityFactory.getInstance().getUserById(Integer.parseInt(userId));
-        return CardFactory.getInstance().getDecks(user);
+        User user = SecurityDAO.getInstance().getUserById(Integer.parseInt(userId));
+        return CardDAO.getInstance().getDecks(user);
     }
 }

@@ -3,32 +3,44 @@ package org.walkingarchive.backend.model.card;
 import java.math.BigDecimal;
 import java.util.List;
 
-import org.walkingarchive.backend.model.security.User;
-import org.walkingarchive.backend.DbHelper;
-
+import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.type.CustomType;
+import org.hibernate.criterion.Restrictions;
+import org.walkingarchive.backend.DbHelper;
+import org.walkingarchive.backend.model.security.User;
 
-public class CardFactory {
-    private static CardFactory instance = new CardFactory();
+public class CardDAO {
+    private static CardDAO instance = new CardDAO();
 
     //Singleton
-    public static CardFactory getInstance() {
+    public static CardDAO getInstance() {
         return instance;
     }
     
-    private CardFactory() {}
+    private CardDAO() {}
     
 
     //----------------------------------------------------------------------------------------------
     // CARD
     //----------------------------------------------------------------------------------------------
     
-    public List<Card> getCardsByType(String type) {
+    public List<Card> getCardsByType(String type, int offset) {
         Session session = DbHelper.getSession();
-        List cards = session.createQuery("from Card where type = :type")
+        List cards = session.createQuery("from Card where type = :type order by name asc")
             .setParameter("type", type)
+            .setFirstResult(offset)
+            .setMaxResults(20)
             .list();
+        session.close();
+        return cards;
+    }
+    
+    public List<Card> getCardsBySet(int setId) {
+        Session session = DbHelper.getSession();
+        Criteria criteria = session.createCriteria(Card.class);
+        criteria.createAlias("sets", "set");
+        criteria.add(Restrictions.eq("set.id", setId));
+        List cards = criteria.list();
         session.close();
         return cards;
     }
@@ -62,7 +74,7 @@ public class CardFactory {
     }
 
     //----------------------------------------------------------------------------------------------
-    // COLLECTION
+    // DECK
     //----------------------------------------------------------------------------------------------
     
     public List<Deck> getAllDecks() {
@@ -80,5 +92,15 @@ public class CardFactory {
     
     public Deck getDeckByType(User user, String type) {
         return null;
+    }
+
+    //----------------------------------------------------------------------------------------------
+    // SET
+    //----------------------------------------------------------------------------------------------
+    public Set getSet(int id) {
+        Session session = DbHelper.getSession();
+        Set set = (Set) session.get(Set.class, id);
+        session.close();
+        return set;
     }
 }

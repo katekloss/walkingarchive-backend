@@ -17,7 +17,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.walkingarchive.backend.model.security.SecurityFactory;
+import org.walkingarchive.backend.model.security.SecurityDAO;
 import org.walkingarchive.backend.model.security.User;
 
 @Path("/user/")
@@ -42,7 +42,7 @@ public class UserController {
     public Response getUserById(@PathParam("userId") String userId) throws JSONException {
         //TODO - validate input
         Response result;
-        User user = SecurityFactory.getInstance().getUserById(Integer.parseInt(userId));
+        User user = SecurityDAO.getInstance().getUserById(Integer.parseInt(userId));
         if(user != null) {
             result = Response.ok(createCensoredUser(user), MediaType.APPLICATION_JSON).build();
         }
@@ -69,7 +69,7 @@ public class UserController {
     public Response getUserByName(@PathParam("name") String name) throws JSONException {
         //TODO - validate input
         Response result;
-        User user = SecurityFactory.getInstance().getUserByName(name);
+        User user = SecurityDAO.getInstance().getUserByName(name);
         
         if(user != null) {
             result = Response.ok(createCensoredUser(user), MediaType.APPLICATION_JSON).build();
@@ -98,7 +98,7 @@ public class UserController {
                 jsonObject.get("password").toString(), 
                 jsonObject.get("email").toString());
         
-        user = SecurityFactory.getInstance().createUser(user);
+        user = SecurityDAO.getInstance().createUser(user);
         
         return Response.ok(user, MediaType.APPLICATION_JSON).build();
     }

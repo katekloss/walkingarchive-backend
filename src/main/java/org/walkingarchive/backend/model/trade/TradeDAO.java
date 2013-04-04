@@ -9,15 +9,15 @@ import org.walkingarchive.backend.DbHelper;
 import org.walkingarchive.backend.model.card.Card;
 import org.walkingarchive.backend.model.security.User;
 
-public class TradeFactory {
-    private static TradeFactory instance = new TradeFactory();
+public class TradeDAO {
+    private static TradeDAO instance = new TradeDAO();
 
     //Singleton
-    public static TradeFactory getInstance() {
+    public static TradeDAO getInstance() {
         return instance;
     }
     
-    private TradeFactory() {}
+    private TradeDAO() {}
 
     public List<Trade> getAllTrades() {
         return null;

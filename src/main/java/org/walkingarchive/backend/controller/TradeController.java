@@ -22,11 +22,11 @@ import javax.ws.rs.core.UriInfo;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
 import org.walkingarchive.backend.model.card.Card;
-import org.walkingarchive.backend.model.card.CardFactory;
-import org.walkingarchive.backend.model.security.SecurityFactory;
+import org.walkingarchive.backend.model.card.CardDAO;
+import org.walkingarchive.backend.model.security.SecurityDAO;
 import org.walkingarchive.backend.model.security.User;
 import org.walkingarchive.backend.model.trade.Trade;
-import org.walkingarchive.backend.model.trade.TradeFactory;
+import org.walkingarchive.backend.model.trade.TradeDAO;
 
 @Path("/trade/")
 public class TradeController {
@@ -45,7 +45,7 @@ public class TradeController {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Trade> getTradeByUser(@PathParam("userId") String userId) {
         //TODO - validate input
-        return TradeFactory.getInstance().getTradesForUser(userId);
+        return TradeDAO.getInstance().getTradesForUser(userId);
     }
 
     @GET
@@ -54,7 +54,7 @@ public class TradeController {
     public List<Trade> getTradeByUser(@PathParam("date") Long date) {
         //TODO - validate input
         Date tradeDate = new Date(date);
-        return TradeFactory.getInstance().getTradesForDate(tradeDate);
+        return TradeDAO.getInstance().getTradesForDate(tradeDate);
     }
     
     @PUT
@@ -62,10 +62,10 @@ public class TradeController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response createTrade(String json) throws Exception {
         JSONObject jsonObject = new JSONObject(json);
-        User user = SecurityFactory.getInstance().getUserById(jsonObject.getInt("user"));
+        User user = SecurityDAO.getInstance().getUserById(jsonObject.getInt("user"));
         
         Trade trade = new Trade(user, new ArrayList<Card>(), new ArrayList<Card>(), true);
-        trade = TradeFactory.getInstance().createTrade(trade);
+        trade = TradeDAO.getInstance().createTrade(trade);
         
         return Response.ok(trade, MediaType.APPLICATION_JSON).build();
     }
@@ -75,21 +75,21 @@ public class TradeController {
     @Consumes(MediaType.APPLICATION_JSON)
     public Response update(String json) throws Exception {
         JSONObject jsonObject = new JSONObject(json);
-        Trade trade = TradeFactory.getInstance().getTradeForId(jsonObject.getInt("id"));
+        Trade trade = TradeDAO.getInstance().getTradeForId(jsonObject.getInt("id"));
         trade.setActive(true);
         JSONArray cardsGiving = jsonObject.getJSONArray("givingCards");
         JSONArray cardsReceiving = jsonObject.getJSONArray("receivingCards");
         
         for(int i = 0; i < cardsGiving.length(); i++) {
-            Card card = CardFactory.getInstance().getCard(cardsGiving.getInt(i));
+            Card card = CardDAO.getInstance().getCard(cardsGiving.getInt(i));
             trade.addCardToGiving(card);
         }
         for(int i = 0; i < cardsReceiving.length(); i++) {
-            Card card = CardFactory.getInstance().getCard(cardsReceiving.getInt(i));
+            Card card = CardDAO.getInstance().getCard(cardsReceiving.getInt(i));
             trade.addCardToReceiving(card);
         }
         
-        trade = TradeFactory.getInstance().updateTrade(trade);
+        trade = TradeDAO.getInstance().updateTrade(trade);
         
         return Response.ok(trade, MediaType.APPLICATION_JSON).build();
     }
