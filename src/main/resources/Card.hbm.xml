@@ -22,6 +22,9 @@
         <property name="flavortext">
             <column name="flavortext" />
         </property>
+        <property name="mana" type="Hstore">
+            <column name="mana" />
+        </property>
 
         <set name="sets" table="CardSets" lazy="false" fetch="join">
             <key column="cardId" />

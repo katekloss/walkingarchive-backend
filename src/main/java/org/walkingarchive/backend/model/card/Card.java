@@ -1,6 +1,7 @@
 package org.walkingarchive.backend.model.card;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 
 public class Card {
     private Integer id;
@@ -10,9 +11,9 @@ public class Card {
     private String text;
     private String flavortext;
     private BigDecimal value;
-    private String manacolor;
     private java.util.Set<Set> sets;
     private java.util.Set<Price> prices;
+    private HashMap<String, String> mana;
 
     public Card() {}
     
@@ -68,10 +69,6 @@ public class Card {
         this.flavortext = value;
     }
     
-    public String getManaColor() {
-        return manacolor;
-    }
-    
     public BigDecimal getValue() {
         return value;
     }
@@ -96,5 +93,15 @@ public class Card {
     public void setPrices(java.util.Set<Price> value)
     {
         prices = value;
+    }
+
+    public HashMap<String, String> getMana()
+    {
+        return mana;
+    }
+
+    public void setMana(HashMap<String, String> value)
+    {
+        mana = value;
     }
 }

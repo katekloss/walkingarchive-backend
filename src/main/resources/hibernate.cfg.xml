@@ -9,6 +9,7 @@
         <property name="connection.password">yTLqKwyQLibsiTvtNP2L</property>
         <property name="temp.use_jdbc_metadata_defaults">false</property>
         
+        <mapping resource="Types.hbm.xml" />
         <mapping resource="Card.hbm.xml" />
         <mapping resource="Trade.hbm.xml" />
         <mapping resource="User.hbm.xml" />
