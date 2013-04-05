@@ -13,7 +13,7 @@ def main(start = 1):
 	cursor.execute(query, parameters)
 
 	for row in cursor:
-		url = "http://deckbox.org/mtg/%s" % urllib2.quote(row[1].encode('utf-8'))
+		url = "http://deckbox.org/mtg/%s" % row[1]
 		html = urllib2.urlopen(url).read()
 		soup = BeautifulSoup(html)
 		editions = soup.findAll(class_="edition_price", style="display:none")
