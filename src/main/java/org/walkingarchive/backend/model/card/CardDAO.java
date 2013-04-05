@@ -57,7 +57,7 @@ public class CardDAO {
     
     public List<Card> getCardsByMana(String mana, int offset) {
         Session session = DbHelper.getSession();
-        List cards = session.createSQLQuery("SELECT {cards.*} FROM cards {cards} WHERE exist(mana, :mana)")
+        List cards = session.createSQLQuery("SELECT {cards.*} FROM cards {cards} WHERE exist(mana, :mana) ORDER BY name ASC")
                 .addEntity("cards", Card.class)
                 .setParameter("mana", mana)
                 .setFirstResult(offset)
