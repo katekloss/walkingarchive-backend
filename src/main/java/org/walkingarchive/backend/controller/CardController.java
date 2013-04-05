@@ -115,6 +115,22 @@ public class CardController {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @Path("set/name/{set}")
+    public Response getCardsBySet(@PathParam("set") String setname) {
+        //TODO - validate input
+        Response result;
+        List<Card> c = CardDAO.getInstance().getCardsBySetName(setname);
+        if(c != null) {
+            result = Response.ok(c, MediaType.APPLICATION_JSON).build();
+        }
+        else {
+            result = Response.status(Status.NOT_FOUND).build();
+        }
+        return result;
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("mana/{mana}")
     public Response getCardsByMana(@PathParam("mana") String mana) {
         //TODO - validate input
