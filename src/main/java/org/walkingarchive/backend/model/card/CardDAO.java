@@ -45,6 +45,18 @@ public class CardDAO {
         return cards;
     }
     
+    public List<Card> getCardsByMana(String mana, int offset) {
+        Session session = DbHelper.getSession();
+        List cards = session.createSQLQuery("SELECT {cards.*} FROM cards {cards} WHERE exist(mana, :mana)")
+                .addEntity("cards", Card.class)
+                .setParameter("mana", mana)
+                .setFirstResult(offset)
+                .setMaxResults(20)
+                .list();
+        session.close();
+        return cards;
+    }
+    
     public List<Card> getCardsByName(String name) {
         Session session = DbHelper.getSession();
         List cards = session.createQuery("from Card where lower(name) like concat(lower(:name),'%')")
