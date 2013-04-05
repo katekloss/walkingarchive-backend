@@ -31,9 +31,9 @@
             <many-to-many column="setId" class="org.walkingarchive.backend.model.card.Set" />
         </set>
 
-        <set name="prices" table="CardPrices" inverse="true" lazy="false" fetch="join">
+        <set name="prices" table="CardPrices" lazy="false" fetch="join">
             <key column="cardid" />
-            <many-to-many class="org.walkingarchive.backend.model.card.Price" column="priceid" />
+            <many-to-many column="priceid" unique="true" class="org.walkingarchive.backend.model.card.Price" />
         </set>
     </class>
 </hibernate-mapping>

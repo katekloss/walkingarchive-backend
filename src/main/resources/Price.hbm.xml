@@ -7,7 +7,9 @@
 			<generator class="native" />
 		</id>
 
-		<one-to-one name="set" class="org.walkingarchive.backend.model.card.Set" />
+		<many-to-one name="set" class="org.walkingarchive.backend.model.card.Set">
+			<column name="setid" />
+		</many-to-one>
 
 		<property name="price">
 			<column name="price" />
