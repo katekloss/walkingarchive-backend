@@ -164,4 +164,12 @@ public class CardController {
 //        return CardFactory.getInstance().getCardsInValueRange(low, high);
         throw new RuntimeException("getCardsByValue is unimplemented");
     }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("search/{query}")
+    public List<Card> getCardsByTextSearch(@PathParam("query") String query)
+    {
+        return CardDAO.getInstance().getCardsBySearch(query);
+    }
 }

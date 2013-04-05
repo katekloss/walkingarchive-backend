@@ -95,6 +95,20 @@ public class CardDAO {
         return null;
     }
 
+    public List<Card> getCardsBySearch(String query)
+    {
+        Session session = DbHelper.getSession();
+        String sql = "WITH SearchResults AS (SELECT (PerformSearch(:query)).*) "
+                     + "SELECT C.* FROM SearchResults "
+                     + "JOIN Cards AS C ON C.cardid = SearchResults.cardid";
+        List cards = session.createSQLQuery(sql)
+            .addEntity(Card.class)
+            .setParameter("query", query)
+            .list();
+        session.close();
+        return cards;
+    }
+
     //----------------------------------------------------------------------------------------------
     // DECK
     //----------------------------------------------------------------------------------------------
