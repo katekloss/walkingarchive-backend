@@ -99,11 +99,52 @@ public class CardController {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("set/{set}")
+    @Path("set/id/{set}")
     public Response getCardsBySet(@PathParam("set") int setId) {
         //TODO - validate input
         Response result;
         List<Card> c = CardDAO.getInstance().getCardsBySet(setId);
+        if(c != null) {
+            result = Response.ok(c, MediaType.APPLICATION_JSON).build();
+        }
+        else {
+            result = Response.status(Status.NOT_FOUND).build();
+        }
+        return result;
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("set/name/{set}")
+    public Response getCardsBySet(@PathParam("set") String setname) {
+        //TODO - validate input
+        Response result;
+        List<Card> c = CardDAO.getInstance().getCardsBySetName(setname);
+        if(c != null) {
+            result = Response.ok(c, MediaType.APPLICATION_JSON).build();
+        }
+        else {
+            result = Response.status(Status.NOT_FOUND).build();
+        }
+        return result;
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("mana/{mana}")
+    public Response getCardsByMana(@PathParam("mana") String mana) {
+        //TODO - validate input
+        return getCardsByManaOffset(mana, 1);
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("mana/{mana}/{offest}")
+    public Response getCardsByManaOffset(@PathParam("mana") String mana,
+            @PathParam("offset") int offset) {
+        //TODO - validate input
+        Response result;
+        List<Card> c = CardDAO.getInstance().getCardsByMana(mana, (offset-1)*20);
         if(c != null) {
             result = Response.ok(c, MediaType.APPLICATION_JSON).build();
         }

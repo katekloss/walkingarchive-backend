@@ -45,6 +45,28 @@ public class CardDAO {
         return cards;
     }
     
+    public List<Card> getCardsBySetName(String setname) {
+        Session session = DbHelper.getSession();
+        Criteria criteria = session.createCriteria(Card.class);
+        criteria.createAlias("sets", "set");
+        criteria.add(Restrictions.ilike("set.name", setname));
+        List cards = criteria.list();
+        session.close();
+        return cards;
+    }
+    
+    public List<Card> getCardsByMana(String mana, int offset) {
+        Session session = DbHelper.getSession();
+        List cards = session.createSQLQuery("SELECT {cards.*} FROM cards {cards} WHERE exist(mana, :mana) ORDER BY name ASC")
+                .addEntity("cards", Card.class)
+                .setParameter("mana", mana)
+                .setFirstResult(offset)
+                .setMaxResults(20)
+                .list();
+        session.close();
+        return cards;
+    }
+    
     public List<Card> getCardsByName(String name) {
         Session session = DbHelper.getSession();
         List cards = session.createQuery("from Card where lower(name) like concat(lower(:name),'%')")
@@ -102,5 +124,14 @@ public class CardDAO {
         Set set = (Set) session.get(Set.class, id);
         session.close();
         return set;
+    }
+    
+    public List<Set> getSetsByName(String name) {
+        Session session = DbHelper.getSession();
+        List sets = session.createQuery("from Set where lower(setname) like concat(lower(:name),'%')")
+            .setParameter("name", name)
+            .list();
+        session.close();
+        return sets;
     }
 }
