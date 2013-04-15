@@ -52,7 +52,23 @@ public class CardController {
     @Path("name/{card}")
     public Response getCardsByName(@PathParam("card") String card) {
         Response result;
-        List<Card> c = CardDAO.getInstance().getCardsByName(card);
+        List<Card> c = CardDAO.getInstance().getCardsByName(card, 0);
+        if(c != null) {
+            result = Response.ok(c, MediaType.APPLICATION_JSON).build();
+        }
+        else {
+            result = Response.status(Status.NOT_FOUND).build();
+        }
+        return result;
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("name/{card}/{offset}")
+    public Response getCardsByNameOffset(@PathParam("card") String card,
+            @PathParam("offset") int offset) {
+        Response result;
+        List<Card> c = CardDAO.getInstance().getCardsByName(card, (offset-1)*20);
         if(c != null) {
             result = Response.ok(c, MediaType.APPLICATION_JSON).build();
         }
@@ -168,8 +184,15 @@ public class CardController {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("search/{query}")
-    public List<Card> getCardsByTextSearch(@PathParam("query") String query)
-    {
-        return CardDAO.getInstance().getCardsBySearch(query);
+    public List<Card> getCardsByTextSearch(@PathParam("query") String query) {
+        return CardDAO.getInstance().getCardsBySearch(query, 0);
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("search/{query}/{offset}")
+    public List<Card> getCardsByTextSearchOffset(@PathParam("query") String query,
+            @PathParam("offset") int offset) {
+        return CardDAO.getInstance().getCardsBySearch(query, (offset-1)*20);
     }
 }

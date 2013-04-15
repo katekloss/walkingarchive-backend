@@ -67,10 +67,12 @@ public class CardDAO {
         return cards;
     }
     
-    public List<Card> getCardsByName(String name) {
+    public List<Card> getCardsByName(String name, int offset) {
         Session session = DbHelper.getSession();
-        List cards = session.createQuery("from Card where lower(name) like concat(lower(:name),'%')")
+        List cards = session.createQuery("from Card where lower(name) like concat(lower(:name),'%') order by name asc")
             .setParameter("name", name)
+            .setFirstResult(offset)
+            .setMaxResults(20)
             .list();
         session.close();
         return cards;
@@ -95,7 +97,7 @@ public class CardDAO {
         return null;
     }
 
-    public List<Card> getCardsBySearch(String query)
+    public List<Card> getCardsBySearch(String query, int offset)
     {
         Session session = DbHelper.getSession();
         String sql = "WITH SearchResults AS (SELECT (PerformSearch(:query)).*) "
@@ -104,6 +106,8 @@ public class CardDAO {
         List cards = session.createSQLQuery(sql)
             .addEntity(Card.class)
             .setParameter("query", query)
+            .setFirstResult(offset)
+            .setMaxResults(20)
             .list();
         session.close();
         return cards;
