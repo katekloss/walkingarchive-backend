@@ -1,5 +1,8 @@
 package org.walkingarchive.backend.model.security;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.codehaus.jackson.annotate.JsonProperty;
+
 public class User {
     private Integer id;
     private String name;
@@ -31,10 +34,12 @@ public class User {
         this.id = id;
     }
 
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
 
+    @JsonProperty
     public void setPassword(String password) {
         this.password = password;
     }

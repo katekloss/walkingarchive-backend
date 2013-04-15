@@ -44,23 +44,13 @@ public class UserController {
         Response result;
         User user = SecurityDAO.getInstance().getUserById(Integer.parseInt(userId));
         if(user != null) {
-            result = Response.ok(createCensoredUser(user), MediaType.APPLICATION_JSON).build();
+            result = Response.ok(user, MediaType.APPLICATION_JSON).build();
         }
         else {
             result = Response.status(Status.NOT_FOUND).build();
         }
         
         return result;
-    }
-    
-    private JSONObject createCensoredUser(User user) throws JSONException {
-        JSONObject cu = new JSONObject();
-
-        cu.put("id", user.getId());
-        cu.put("name", user.getName());
-        cu.put("email", user.getEmail());
-        
-        return cu;
     }
 
     @GET
@@ -72,7 +62,7 @@ public class UserController {
         User user = SecurityDAO.getInstance().getUserByName(name);
         
         if(user != null) {
-            result = Response.ok(createCensoredUser(user), MediaType.APPLICATION_JSON).build();
+            result = Response.ok(user, MediaType.APPLICATION_JSON).build();
         }
         else {
             result = Response.status(Status.NOT_FOUND).build();
