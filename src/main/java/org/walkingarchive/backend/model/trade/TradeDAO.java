@@ -30,9 +30,9 @@ public class TradeDAO {
         return trade;
     }
     
-    public List<Trade> getTradesForUser(String userId) {
+    public List<Trade> getTradesForUser(Integer userId) {
         Session session = DbHelper.getSession();
-        List trades = session.createQuery("from Trade where user = :user")
+        List trades = session.createQuery("from Trade where userid = :user")
             .setParameter("user", userId)
             .list();
         session.close();

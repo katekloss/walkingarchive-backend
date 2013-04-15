@@ -45,7 +45,8 @@ public class TradeController {
     @Produces(MediaType.APPLICATION_JSON)
     public List<Trade> getTradeByUser(@PathParam("userId") String userId) {
         //TODO - validate input
-        return TradeDAO.getInstance().getTradesForUser(userId);
+        Integer userIdInt = Integer.parseInt(userId);
+        return TradeDAO.getInstance().getTradesForUser(userIdInt);
     }
 
     @GET
