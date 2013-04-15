@@ -17,6 +17,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.codehaus.jettison.json.JSONArray;
@@ -58,6 +59,18 @@ public class TradeController {
         return TradeDAO.getInstance().getTradesForDate(tradeDate);
     }
     
+    @GET
+    @Path("id/{tradeId}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getTradeById(@PathParam("tradeId") Integer id)
+    {
+        Trade trade = TradeDAO.getInstance().getTradeForId(id);
+        if(trade != null)
+            return Response.ok(trade, MediaType.APPLICATION_JSON).build();
+        else
+            return Response.status(Status.NOT_FOUND).build();
+    }
+
     @PUT
     @Path("add")
     @Consumes(MediaType.APPLICATION_JSON)
