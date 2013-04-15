@@ -7,13 +7,13 @@ import org.hibernate.Session;
 
 public class DbHelper
 {
-	public static Session getSession()
-	{
-		Configuration config = new Configuration();
-		config.configure();
-		ServiceRegistry registry = new ServiceRegistryBuilder()
-			.applySettings(config.getProperties())
-			.buildServiceRegistry();
-		return config.buildSessionFactory(registry).openSession();
-	}
+    public static Session getSession()
+    {
+        Configuration config = new Configuration();
+        config.configure();
+        ServiceRegistry registry = new ServiceRegistryBuilder()
+            .applySettings(config.getProperties())
+            .buildServiceRegistry();
+        return config.buildSessionFactory(registry).openSession();
+    }
 }
