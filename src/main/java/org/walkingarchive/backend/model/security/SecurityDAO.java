@@ -22,26 +22,42 @@ public class SecurityDAO {
     
     public User getUserById(Integer id) {
         Session session = DbHelper.getSession();
-        User user = (User) session.get(User.class, id);
-        session.close();
+        User user = null;
+        try {
+            user = (User) session.get(User.class, id);
+        }
+        finally {
+            session.close();
+        }
         return user;
     }
     
     public User getUserByName(String name) {
         Session session = DbHelper.getSession();
-        User user = (User) session.createQuery("from User where name = :name")
-            .setParameter("name", name)
-            .uniqueResult();
-        session.close();
+        User user = null;
+        try {
+            user = (User) session.createQuery("from User where name = :name")
+                    .setParameter("name", name)
+                    .uniqueResult();
+        }
+        finally {
+            session.close();
+        }
         return user;
     }
     
     public User getUserByEmail(String email) {
         Session session = DbHelper.getSession();
-        User user = (User) session.createQuery("from User where lower(email) = lower(:email)")
-            .setParameter("email", email)
-            .uniqueResult();
-        session.close();
+        User user = null;
+        try {
+            user = (User) session.createQuery("from User where lower(email) = lower(:email)")
+                    .setParameter("email", email)
+                    .uniqueResult();
+        }
+        finally {
+            session.close();
+        }
+        
         return user;
     }
     

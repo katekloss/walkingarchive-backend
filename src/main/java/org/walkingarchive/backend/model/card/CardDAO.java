@@ -28,62 +28,92 @@ public class CardDAO {
     
     public List<Card> getCardsByType(String type, int offset) {
         Session session = DbHelper.getSession();
-        List cards = session.createQuery("from Card where type = :type order by name asc")
-            .setParameter("type", type)
-            .setFirstResult(offset)
-            .setMaxResults(20)
-            .list();
-        session.close();
+        List cards = null;
+        try {
+            cards = session.createQuery("from Card where type = :type order by name asc")
+                .setParameter("type", type)
+                .setFirstResult(offset)
+                .setMaxResults(20)
+                .list();
+        }
+        finally {
+            session.close();
+        }
         return cards;
     }
     
     public List<Card> getCardsBySet(int setId) {
         Session session = DbHelper.getSession();
-        Criteria criteria = session.createCriteria(Card.class);
-        criteria.createAlias("sets", "set");
-        criteria.add(Restrictions.eq("set.id", setId));
-        List cards = criteria.list();
-        session.close();
+        List cards = null;
+        try {
+            Criteria criteria = session.createCriteria(Card.class);
+            criteria.createAlias("sets", "set");
+            criteria.add(Restrictions.eq("set.id", setId));
+            cards = criteria.list();
+        }
+        finally {
+            session.close();
+        }
         return cards;
     }
     
     public List<Card> getCardsBySetName(String setname) {
         Session session = DbHelper.getSession();
-        Criteria criteria = session.createCriteria(Card.class);
-        criteria.createAlias("sets", "set");
-        criteria.add(Restrictions.ilike("set.name", setname));
-        List cards = criteria.list();
-        session.close();
+        List cards = null;
+        try {
+            Criteria criteria = session.createCriteria(Card.class);
+            criteria.createAlias("sets", "set");
+            criteria.add(Restrictions.ilike("set.name", setname));
+            cards = criteria.list();
+        }
+        finally {
+            session.close();
+        }
         return cards;
     }
     
     public List<Card> getCardsByMana(String mana, int offset) {
         Session session = DbHelper.getSession();
-        List cards = session.createSQLQuery("SELECT {cards.*} FROM cards {cards} WHERE exist(mana, :mana) ORDER BY name ASC")
+        List cards = null;
+        try {
+            cards = session.createSQLQuery("SELECT {cards.*} FROM cards {cards} WHERE exist(mana, :mana) ORDER BY name ASC")
                 .addEntity("cards", Card.class)
                 .setParameter("mana", mana)
                 .setFirstResult(offset)
                 .setMaxResults(20)
                 .list();
-        session.close();
+        }
+        finally {
+            session.close();
+        }
         return cards;
     }
     
     public List<Card> getCardsByName(String name, int offset) {
         Session session = DbHelper.getSession();
-        List cards = session.createQuery("from Card where lower(name) like concat(lower(:name),'%') order by name asc")
-            .setParameter("name", name)
-            .setFirstResult(offset)
-            .setMaxResults(20)
-            .list();
-        session.close();
+        List cards = null;
+        try {
+            cards = session.createQuery("from Card where lower(name) like concat(lower(:name),'%') order by name asc")
+                .setParameter("name", name)
+                .setFirstResult(offset)
+                .setMaxResults(20)
+                .list();
+        }
+        finally {
+            session.close();
+        }
         return cards;
     }
     
     public Card getCard(int cardId) {
         Session session = DbHelper.getSession();
-        Card card = (Card) session.get(Card.class, cardId);
-        session.close();
+        Card card = null;
+        try {
+            card = (Card) session.get(Card.class, cardId);
+        }
+        finally {
+            session.close();
+        }
         return card;
     }
     
@@ -105,13 +135,18 @@ public class CardDAO {
         String sql = "WITH SearchResults AS (SELECT (PerformSearch(:query)).*) "
                      + "SELECT C.* FROM SearchResults "
                      + "JOIN Cards AS C ON C.cardid = SearchResults.cardid";
-        List cards = session.createSQLQuery(sql)
-            .addEntity(Card.class)
-            .setParameter("query", query)
-            .setFirstResult(offset)
-            .setMaxResults(20)
-            .list();
-        session.close();
+        List cards = null;
+        try {
+            cards = session.createSQLQuery(sql)
+                .addEntity(Card.class)
+                .setParameter("query", query)
+                .setFirstResult(offset)
+                .setMaxResults(20)
+                .list();
+        }
+        finally {
+            session.close();
+        }
         return cards;
     }
 
@@ -141,10 +176,15 @@ public class CardDAO {
     
     public List<Deck> getDecks(User user) {
         Session session = DbHelper.getSession();
-        List decks = session.createQuery("from Deck where userid = :userid")
-            .setParameter("userid", user.getId())
-            .list();
-        session.close();
+        List decks = null;
+        try {
+            decks = session.createQuery("from Deck where userid = :userid")
+                .setParameter("userid", user.getId())
+                .list();
+        }
+        finally {
+            session.close();
+        }
         return decks;
     }
     
@@ -213,17 +253,27 @@ public class CardDAO {
     //----------------------------------------------------------------------------------------------
     public Set getSet(int id) {
         Session session = DbHelper.getSession();
-        Set set = (Set) session.get(Set.class, id);
-        session.close();
+        Set set = null;
+        try {
+            set = (Set) session.get(Set.class, id);
+        }
+        finally {
+            session.close();
+        }
         return set;
     }
     
     public List<Set> getSetsByName(String name) {
         Session session = DbHelper.getSession();
-        List sets = session.createQuery("from Set where lower(setname) like concat(lower(:name),'%')")
-            .setParameter("name", name)
-            .list();
-        session.close();
+        List sets = null;
+        try {
+            sets = session.createQuery("from Set where lower(setname) like concat(lower(:name),'%')")
+                .setParameter("name", name)
+                .list();
+        }
+        finally {
+            session.close();
+        }
         return sets;
     }
 }

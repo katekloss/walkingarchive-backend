@@ -25,17 +25,28 @@ public class TradeDAO {
     
     public Trade getTradeForId(Integer id) {
         Session session = DbHelper.getSession();
-        Trade trade = (Trade) session.get(Trade.class, id);
-        session.close();
+        Trade trade = null;
+        try {
+            trade = (Trade) session.get(Trade.class, id);
+        }
+        finally {
+            session.close();
+        }
+        
         return trade;
     }
     
     public List<Trade> getTradesForUser(Integer userId) {
         Session session = DbHelper.getSession();
-        List trades = session.createQuery("from Trade where userid = :user")
-            .setParameter("user", userId)
-            .list();
-        session.close();
+        List trades = null;
+        try {
+            trades = session.createQuery("from Trade where userid = :user")
+                .setParameter("user", userId)
+                .list();
+        }
+        finally {
+            session.close();
+        }
         return trades;
     }
 
