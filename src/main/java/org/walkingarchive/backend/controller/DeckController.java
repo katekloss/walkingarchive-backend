@@ -1,6 +1,5 @@
 package org.walkingarchive.backend.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -26,8 +25,6 @@ import org.walkingarchive.backend.model.card.CardDAO;
 import org.walkingarchive.backend.model.card.Deck;
 import org.walkingarchive.backend.model.security.SecurityDAO;
 import org.walkingarchive.backend.model.security.User;
-import org.walkingarchive.backend.model.trade.Trade;
-import org.walkingarchive.backend.model.trade.TradeDAO;
 
 @Path("/deck/")
 public class DeckController {

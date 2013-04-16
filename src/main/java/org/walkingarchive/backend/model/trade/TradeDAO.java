@@ -6,8 +6,6 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.walkingarchive.backend.DbHelper;
-import org.walkingarchive.backend.model.card.Card;
-import org.walkingarchive.backend.model.security.User;
 
 public class TradeDAO {
     private static TradeDAO instance = new TradeDAO();

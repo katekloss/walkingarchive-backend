@@ -9,7 +9,6 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.walkingarchive.backend.DbHelper;
 import org.walkingarchive.backend.model.security.User;
-import org.walkingarchive.backend.model.trade.Trade;
 
 public class CardDAO {
     private static CardDAO instance = new CardDAO();

@@ -4,6 +4,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -17,6 +18,8 @@ import javax.ws.rs.core.UriInfo;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.walkingarchive.backend.model.card.CardDAO;
+import org.walkingarchive.backend.model.card.Deck;
 import org.walkingarchive.backend.model.security.SecurityDAO;
 import org.walkingarchive.backend.model.security.User;
 
@@ -91,5 +94,21 @@ public class UserController {
         user = SecurityDAO.getInstance().createUser(user);
         
         return Response.ok(user, MediaType.APPLICATION_JSON).build();
+    }
+    
+    @DELETE
+    @Path("delete/{id}")
+    public Response delete(@PathParam("id") int id) {
+        Response result;
+        User user = SecurityDAO.getInstance().getUserById(id);
+        if (user != null) {
+            SecurityDAO.getInstance().delete(user);
+            result = Response.ok().build();
+        }
+        else {
+            result = Response.status(Status.NOT_FOUND).build();
+        }
+        
+        return result;
     }
 }

@@ -1,7 +1,5 @@
 package org.walkingarchive.backend.model.security;
 
-import java.util.List;
-
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.walkingarchive.backend.DbHelper;
@@ -79,5 +77,22 @@ public class SecurityDAO {
         }
 
         return user;
+    }
+    
+    public void delete(User user) {
+        Session session = DbHelper.getSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.delete(user);
+            tx.commit();
+        }
+        catch (Exception e) {
+            if (tx != null) tx.rollback();
+            throw new RuntimeException("Error in deleting user", e);
+        }
+        finally {
+            session.close();
+        }
     }
 }
