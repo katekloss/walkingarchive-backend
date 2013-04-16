@@ -79,6 +79,23 @@ public class TradeDAO {
             session.close();
         }
         
-        return null;
+        return trade;
+    }
+    
+    public void delete(Trade trade) {
+        Session session = DbHelper.getSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.delete(trade);
+            tx.commit();
+        }
+        catch (Exception e) {
+            if (tx != null) tx.rollback();
+            throw new RuntimeException("Error in deleting trade", e);
+        }
+        finally {
+            session.close();
+        }
     }
 }

@@ -5,9 +5,11 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.walkingarchive.backend.DbHelper;
 import org.walkingarchive.backend.model.security.User;
+import org.walkingarchive.backend.model.trade.Trade;
 
 public class CardDAO {
     private static CardDAO instance = new CardDAO();
@@ -121,6 +123,22 @@ public class CardDAO {
         return null;
     }
     
+    public Deck getDeck(int deckId) {
+        Session session = DbHelper.getSession();
+        Deck deck = null;
+        try {
+            deck = (Deck) session.get(Deck.class, deckId);
+        }
+        catch(Exception e) {
+            throw new RuntimeException("Error updating Deck with id " + deckId, e);
+        }
+        finally {
+            session.close();
+        }
+        
+        return deck;
+    }
+    
     public List<Deck> getDecks(User user) {
         Session session = DbHelper.getSession();
         List decks = session.createQuery("from Deck where userid = :userid")
@@ -132,6 +150,62 @@ public class CardDAO {
     
     public Deck getDeckByType(User user, String type) {
         return null;
+    }
+    
+    public Deck createDeck(Deck deck) throws Exception {
+        Session session = DbHelper.getSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            Integer id = (Integer) session.save(deck);
+            deck.setId(id);
+            tx.commit();
+        }
+        catch (Exception e) {
+            if (tx!=null) tx.rollback();
+            throw new RuntimeException("Error creating new Deck", e);
+        }
+        finally {
+            session.close();
+        }
+
+        return deck;
+    }
+    
+    public Deck updateDeck(Deck deck) throws Exception {
+        Session session = DbHelper.getSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.update(deck);
+            tx.commit();
+        }
+        catch (Exception e) {
+            if (tx != null) tx.rollback();
+            throw new RuntimeException("Error in updating Deck", e);
+        }
+        finally {
+            session.close();
+        }
+        
+        return deck;
+    }
+    
+    public void deleteDeck(Deck deck) {
+        Session session = DbHelper.getSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            session.delete(deck);
+            tx.commit();
+        }
+        catch (Exception e) {
+            if (tx != null) tx.rollback();
+            throw new RuntimeException("Error in deleting deck", e);
+        }
+        finally {
+            session.close();
+        }
     }
 
     //----------------------------------------------------------------------------------------------

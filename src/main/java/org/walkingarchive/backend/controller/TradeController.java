@@ -8,6 +8,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -106,5 +107,21 @@ public class TradeController {
         trade = TradeDAO.getInstance().updateTrade(trade);
         
         return Response.ok(trade, MediaType.APPLICATION_JSON).build();
+    }
+    
+    @DELETE
+    @Path("delete/{id}")
+    public Response delete(@PathParam("id") int id) {
+        Response result;
+        Trade trade = TradeDAO.getInstance().getTradeForId(id);
+        if (trade != null) {
+            TradeDAO.getInstance().delete(trade);
+            result = Response.ok().build();
+        }
+        else {
+            result = Response.status(Status.NOT_FOUND).build();
+        }
+        
+        return result;
     }
 }

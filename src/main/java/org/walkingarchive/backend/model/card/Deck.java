@@ -26,11 +26,10 @@ public class Deck {
     public Integer getId() {
         return id;
     }
-    
-    public String getIdString() {
-        return id.toString();
+
+    public void setId(Integer id) {
+        this.id = id;
     }
-    
     
     public User getOwner() {
         return owner;
@@ -58,10 +57,6 @@ public class Deck {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public void setCollection(List<Card> collection) {
