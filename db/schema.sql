@@ -87,10 +87,11 @@ CREATE TABLE Decks (
 );
 
 CREATE TABLE DeckCards (
+	deckcardid serial NOT NULL,
 	deckid integer NOT NULL,
 	cardid integer NOT NULL,
 
-	PRIMARY KEY (deckid, cardid),
+	PRIMARY KEY (deckcardid),
 	FOREIGN KEY (deckid) REFERENCES Decks ON DELETE CASCADE,
 	FOREIGN KEY (cardid) REFERENCES Cards ON DELETE CASCADE
 );
