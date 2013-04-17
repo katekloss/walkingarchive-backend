@@ -9,11 +9,11 @@
 
         <property name="name" column="deckname" />
         <many-to-one name="owner" class="org.walkingarchive.backend.model.security.User" 
-            column="userid" not-null="true" cascade="save-update" unique="true" />
+            column="userid" not-null="true" cascade="save-update" unique="true" fetch="join" />
         <list name="collection" table="DeckCards"
                 inverse="false" lazy="false" fetch="join">
             <key column="deckid" />
-            <list-index column="id" />
+            <list-index column="deckcardid" />
             <many-to-many class="org.walkingarchive.backend.model.card.Card" 
                 column="cardid" unique="true" />
         </list>

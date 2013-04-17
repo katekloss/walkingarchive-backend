@@ -12,6 +12,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -38,6 +39,7 @@ public class DeckController {
     protected UriInfo uriInfo;
 
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("user/{userId}")
     public List<Deck> getDecksByUser(@PathParam("userId") String userId) {
         //TODO - validate input
@@ -46,6 +48,7 @@ public class DeckController {
     }
     
     @GET
+    @Produces(MediaType.APPLICATION_JSON)
     @Path("id/{id}")
     public Deck getDeck(@PathParam("id") int id) {
         //TODO - validate input
