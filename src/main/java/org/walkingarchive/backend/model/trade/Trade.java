@@ -77,6 +77,26 @@ public class Trade {
         givingCards.add(card);
     }
     
+    public void removeCardFromReceiving(Card card) {
+        receivingCards.remove(card);
+    }
+    
+    public void removeCardFromGiving(Card card) {
+        givingCards.remove(card);
+    }
+    
+    public void removeAllCardsFromReceiving() {
+        for (int i = receivingCards.size() - 1; i >= 0; i--) {
+            receivingCards.remove(i);
+        }
+    }
+    
+    public void removeAllCardsFromGiving() {
+        for (int i = givingCards.size() - 1; i >= 0; i--) {
+            givingCards.remove(i);
+        }
+    }
+    
     public User getOwner() {
         return owner;
     }

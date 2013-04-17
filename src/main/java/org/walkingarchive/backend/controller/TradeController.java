@@ -95,6 +95,9 @@ public class TradeController {
         JSONArray cardsGiving = jsonObject.getJSONArray("givingCards");
         JSONArray cardsReceiving = jsonObject.getJSONArray("receivingCards");
         
+        trade.removeAllCardsFromGiving();
+        trade.removeAllCardsFromReceiving();
+        
         for(int i = 0; i < cardsGiving.length(); i++) {
             Card card = CardDAO.getInstance().getCard(cardsGiving.getInt(i));
             trade.addCardToGiving(card);
