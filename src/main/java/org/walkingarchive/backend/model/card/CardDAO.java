@@ -1,6 +1,8 @@
 package org.walkingarchive.backend.model.card;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -8,6 +10,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.walkingarchive.backend.DbHelper;
+import org.walkingarchive.backend.helpers.SearchHelper;
 import org.walkingarchive.backend.model.security.User;
 
 public class CardDAO {
@@ -131,14 +134,64 @@ public class CardDAO {
     public List<Card> getCardsBySearch(String query, int offset)
     {
         Session session = DbHelper.getSession();
-        String sql = "WITH SearchResults AS (SELECT (PerformSearch(:query)).*) "
-                     + "SELECT C.* FROM SearchResults "
-                     + "JOIN Cards AS C ON C.cardid = SearchResults.cardid";
+
         List cards = null;
-        try {
+        List<String> tokens = SearchHelper.tokenize(query);
+        LinkedList<String> cleanTokens = new LinkedList();
+        for(String token : tokens)
+        {
+            String sql =
+                "SELECT COUNT(*) " +
+                "FROM RawDictionaryMaterialized " +
+                "WHERE word LIKE :token";
+            int count = ((BigInteger) session.createSQLQuery(sql)
+                .setParameter("token", token)
+                .list()
+                .get(0))
+                .intValue();
+
+            // This word appears exactly in the dictionary
+            if(count == 1)
+                cleanTokens.add(token);
+
+            // Find the word most similar to this one, or remove it
+            // from the query entirely if nothing matches
+            else
+            {
+
+                sql =
+                    "SELECT word, similarity(word, :token) AS similarity " +
+                    "FROM RawDictionaryMaterialized " +
+                    "WHERE word % :token " +
+                    "ORDER BY similarity DESC " +
+                    "LIMIT 1";
+                try
+                {
+                    Object[] row = (Object[]) session.createSQLQuery(sql)
+                        .setParameter("token", token)
+                        .list()
+                        .get(0);
+                    String correctedToken = (String) row[0];
+                    // TODO: We might want to filter on this score?
+                    Float similarity = (Float) row[1];
+                    cleanTokens.add(correctedToken);
+                }
+                catch(IndexOutOfBoundsException e) { }
+            }
+        }
+
+        String cleanedQuery = SearchHelper.join(cleanTokens, " ");
+        System.out.println("Cleaned '" + query + "' to '" + cleanedQuery + "'");
+
+        try
+        {
+            String sql =
+                "WITH SearchResults AS (SELECT (PerformSearch(:query)).*) " +
+                "SELECT C.* FROM SearchResults " +
+                "JOIN Cards AS C ON C.cardid = SearchResults.cardid";
             cards = session.createSQLQuery(sql)
                 .addEntity(Card.class)
-                .setParameter("query", query)
+                .setParameter("query", cleanedQuery)
                 .setFirstResult(offset)
                 .setMaxResults(20)
                 .list();
