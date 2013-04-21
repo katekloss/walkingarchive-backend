@@ -2,6 +2,7 @@
 --- Extensions
 ---
 CREATE EXTENSION hstore;
+CREATE EXTENSION pg_trgm;
 
 ---
 --- Types
@@ -143,6 +144,11 @@ CREATE TABLE Prices (
 	FOREIGN KEY (setid) REFERENCES Sets ON DELETE CASCADE
 );
 
+CREATE TABLE RawDictionaryMaterialized (
+	word text,
+	count bigint
+);
+
 ---
 --- Views
 ---
@@ -174,6 +180,7 @@ ORDER BY count DESC;
 CREATE INDEX idx_cardvectors_textvector ON CardVectors USING gin(textvector);
 CREATE INDEX idx_cards_name ON Cards (name);
 CREATE INDEX idx_cards_type ON Cards (type);
+CREATE INDEX idx_rawdictionarymaterialized_word ON RawDictionaryMaterialized USING gin(word gin_trgm_ops);
 
 ---
 --- Functions
