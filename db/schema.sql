@@ -189,9 +189,9 @@ CREATE INDEX idx_rawdictionarymaterialized_word ON RawDictionaryMaterialized USI
 CREATE OR REPLACE FUNCTION PerformSearch(query text)
 	RETURNS TABLE(cardid integer, rank real) AS
 $$
-SELECT cardid, ts_rank_cd(textvector, plainto_tsquery(query)) AS rank
+SELECT cardid, ts_rank_cd(textvector, to_tsquery(query)) AS rank
 FROM CardVectors
-WHERE plainto_tsquery(query) @@ textvector
+WHERE to_tsquery(query) @@ textvector
 ORDER BY rank DESC
 $$
 LANGUAGE SQL;

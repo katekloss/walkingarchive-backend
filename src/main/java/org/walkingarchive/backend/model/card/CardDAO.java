@@ -180,7 +180,7 @@ public class CardDAO {
             }
         }
 
-        String cleanedQuery = SearchHelper.join(cleanTokens, " ");
+        String cleanedQuery = SearchHelper.join(cleanTokens, "|");
         System.out.println("Cleaned '" + query + "' to '" + cleanedQuery + "'");
 
         try
