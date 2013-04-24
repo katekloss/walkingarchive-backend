@@ -185,14 +185,6 @@ public class CardController {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("search/{query}")
     public List<Card> getCardsByTextSearch(@PathParam("query") String query) {
-        return CardDAO.getInstance().getCardsBySearch(query, 0);
-    }
-    
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("search/{query}/{offset}")
-    public List<Card> getCardsByTextSearchOffset(@PathParam("query") String query,
-            @PathParam("offset") int offset) {
-        return CardDAO.getInstance().getCardsBySearch(query, (offset-1)*20);
+        return CardDAO.getInstance().getCardsBySearch(query, 20);
     }
 }

@@ -131,7 +131,7 @@ public class CardDAO {
         return null;
     }
 
-    public List<Card> getCardsBySearch(String query, int offset)
+    public List<Card> getCardsBySearch(String query, int limit)
     {
         Session session = DbHelper.getSession();
 
@@ -181,19 +181,18 @@ public class CardDAO {
         }
 
         String cleanedQuery = SearchHelper.join(cleanTokens, "|");
-        System.out.println("Cleaned '" + query + "' to '" + cleanedQuery + "'");
-
+        System.out.println(cleanedQuery);
         try
         {
             String sql =
-                "WITH SearchResults AS (SELECT (PerformSearch(:query)).*) " +
-                "SELECT C.* FROM SearchResults " +
-                "JOIN Cards AS C ON C.cardid = SearchResults.cardid";
+                "WITH SearchResults AS (SELECT (PerformSearch(:query, :count)).*) " +
+                "SELECT C.* FROM SearchResults SR " +
+                "JOIN Cards AS C ON C.cardid = SR.cardid " +
+                "ORDER BY SR.rank DESC";
             cards = session.createSQLQuery(sql)
                 .addEntity(Card.class)
                 .setParameter("query", cleanedQuery)
-                .setFirstResult(offset)
-                .setMaxResults(20)
+                .setParameter("count", limit)
                 .list();
         }
         finally {
