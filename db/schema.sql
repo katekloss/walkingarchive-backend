@@ -149,9 +149,9 @@ CREATE TABLE RawDictionaryMaterialized (
 	count bigint
 );
 
-CREATE TABLE TokenDictionaryMaterialized (
-    token text,
-    count integer
+CREATE TABLE IDF (
+	token text,
+	idf real
 );
 
 ---
@@ -186,6 +186,7 @@ CREATE INDEX idx_cardvectors_textvector ON CardVectors USING gin(textvector);
 CREATE INDEX idx_cards_name ON Cards (name);
 CREATE INDEX idx_cards_type ON Cards (type);
 CREATE INDEX idx_rawdictionarymaterialized_word ON RawDictionaryMaterialized USING gin(word gin_trgm_ops);
+CREATE INDEX idx_idf_token ON IDF (token);
 
 ---
 --- Functions
@@ -194,7 +195,7 @@ CREATE INDEX idx_rawdictionarymaterialized_word ON RawDictionaryMaterialized USI
 CREATE OR REPLACE FUNCTION PerformSearch(query text)
 	RETURNS TABLE(cardid integer, rank real) AS
 $$
-SELECT cardid, ts_rank_intersect(strip(textvector)::text, strip(to_tsquery(query))::text) AS rank
+SELECT cardid, ts_rank_intersect(strip(textvector)::text, strip(to_tsvector(query))::text) AS rank
 FROM CardVectors
 WHERE to_tsquery(query) @@ textvector
 ORDER BY rank DESC
