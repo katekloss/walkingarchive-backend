@@ -12,8 +12,7 @@ PG_MODULE_MAGIC;
 PG_FUNCTION_INFO_V1(ts_rank_intersect);
 
 int tokenize(char *, char ***);
-long getTokenFrequency(char *);
-long getDocumentCount(void);
+float getTokenIDF(char *);
 Datum ts_rank_intersect(PG_FUNCTION_ARGS);
 
 int tokenize(char *string, char ***outArray)
@@ -38,15 +37,15 @@ int tokenize(char *string, char ***outArray)
         return tokens;
 }
 
-long getTokenFrequency(char *token)
+float getTokenIDF(char *token)
 {
     bool isNull;
     text *tokenTextP;
-    Datum tokenDatum, countDatum;
+    Datum tokenDatum, idfDatum;
     Datum *args;
     Oid *argTypes;
     int spiResultCode;
-    short count;
+    float idf;
 
     SPI_connect();
     tokenTextP = cstring_to_text(token);
@@ -57,7 +56,7 @@ long getTokenFrequency(char *token)
     args[0] = tokenDatum;
 
     spiResultCode = SPI_execute_with_args(
-        "SELECT count::integer FROM TokenDictionaryMaterialized WHERE token = $1",
+        "SELECT idf::real FROM IDF WHERE token = $1",
         1,
         argTypes,
         args,
@@ -67,11 +66,11 @@ long getTokenFrequency(char *token)
     );
     if(spiResultCode == SPI_OK_SELECT)
     {
-        countDatum = SPI_getbinval(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 1, &isNull);
-        count = DatumGetInt32(countDatum);
+        idfDatum = SPI_getbinval(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 1, &isNull);
+        idf = DatumGetFloat4(idfDatum);
     } else {
         ereport(ERROR, (errmsg("Unable to query TokenDictionaryMaterialized table. Does it exist?")));
-        count = -1;
+        idf = -1.0;
     }
 
     pfree(args);
@@ -79,29 +78,7 @@ long getTokenFrequency(char *token)
     pfree(tokenTextP);
     SPI_finish();
 
-    return count;
-}
-
-long getDocumentCount()
-{
-    int spiResultCode;
-    Datum countDatum;
-    bool isNull;
-    short count;
-
-    SPI_connect();
-    spiResultCode = SPI_execute("SELECT COUNT(*)::integer FROM CardVectors", 1, 1);
-    if(spiResultCode == SPI_OK_SELECT)
-    {
-        countDatum = SPI_getbinval(SPI_tuptable->vals[0], SPI_tuptable->tupdesc, 1, &isNull);
-        count = DatumGetInt32(countDatum);
-    } else {
-        ereport(ERROR, (errmsg("Unable to query CardVectors table. Does it exist?")));
-        count = -1;
-    }
-
-    SPI_finish();
-    return count;
+    return idf;
 }
 
 Datum ts_rank_intersect(PG_FUNCTION_ARGS)
@@ -109,9 +86,7 @@ Datum ts_rank_intersect(PG_FUNCTION_ARGS)
 	char **documentTokenList, **queryTokenList;
 	char *document, *query;
 	int documentWords, queryWords;
-	int *intersections;
-	int intersectionIdx, i, j;
-    short documentCount, tokenDocumentCount;
+	int i, j;
     float score;
 
 	document = text_to_cstring(PG_GETARG_TEXT_P(0));
@@ -120,27 +95,15 @@ Datum ts_rank_intersect(PG_FUNCTION_ARGS)
 	documentWords = tokenize(document, &documentTokenList);
 	queryWords = tokenize(query, &queryTokenList);
 
-	intersections = malloc(sizeof(int) * queryWords);
-	intersectionIdx = 0;
+    score = 0.0;
 	for(i = 0; i < queryWords; i++)
 	{
 		for(j = 0; j < documentWords; j++)
 		{
 			if(!strcmp(queryTokenList[i], documentTokenList[j]))
-			{
-				intersections[intersectionIdx] = i;
-				intersectionIdx++;
-			}
+			    score += getTokenIDF(queryTokenList[i]);
 		}
 	}
-
-    documentCount = getDocumentCount();
-    score = 0.0;
-    for(i = 0; i < intersectionIdx; i++)
-    {
-        tokenDocumentCount = getTokenFrequency(queryTokenList[intersections[i]]);
-        score += (float) documentCount / tokenDocumentCount;
-    }
 
 	pfree(document);
 	pfree(query);
