@@ -4,6 +4,7 @@
 #include "executor/spi.h"
 #include "catalog/pg_type.h"
 #include <string.h>
+#include <math.h>
 
 #ifdef PG_MODULE_MAGIC
 PG_MODULE_MAGIC;
@@ -170,7 +171,7 @@ Datum ts_rank_idf(PG_FUNCTION_ARGS)
         for(j = 0; j < documentWords; j++)
         {
             if(!strcmp(queryTokenList[i], documentTokenList[j]))
-			    score += (float) documentCount / getTokenFrequency(queryTokenList[i]);
+			    score += log((float) documentCount / getTokenFrequency(queryTokenList[i]));
         }
     }
 
