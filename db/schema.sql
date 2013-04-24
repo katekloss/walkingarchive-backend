@@ -149,6 +149,11 @@ CREATE TABLE RawDictionaryMaterialized (
 	count bigint
 );
 
+CREATE TABLE TokenDictionaryMaterialized (
+    token text,
+    count integer
+);
+
 ---
 --- Views
 ---
@@ -187,9 +192,9 @@ CREATE INDEX idx_rawdictionarymaterialized_word ON RawDictionaryMaterialized USI
 ---
 
 CREATE OR REPLACE FUNCTION PerformSearch(query text)
-	RETURNS TABLE(cardid integer, rank integer) AS
+	RETURNS TABLE(cardid integer, rank real) AS
 $$
-SELECT cardid, ts_rank_intersect(strip(textvector)::text, querytree(to_tsquery(query))) AS rank
+SELECT cardid, ts_rank_intersect(strip(textvector)::text, strip(to_tsquery(query))::text) AS rank
 FROM CardVectors
 WHERE to_tsquery(query) @@ textvector
 ORDER BY rank DESC
