@@ -32,7 +32,7 @@ public class CardDAO {
         Session session = DbHelper.getSession();
         List cards = null;
         try {
-            cards = session.createQuery("from Card where type = :type order by name asc")
+            cards = session.createQuery("from Card where lower(type) = lower(:type) order by name asc")
                 .setParameter("type", type)
                 .setFirstResult(offset)
                 .setMaxResults(20)
@@ -78,7 +78,7 @@ public class CardDAO {
         Session session = DbHelper.getSession();
         List cards = null;
         try {
-            cards = session.createSQLQuery("SELECT {cards.*} FROM cards {cards} WHERE exist(mana, :mana) ORDER BY name ASC")
+            cards = session.createSQLQuery("SELECT {cards.*} FROM cards {cards} WHERE exist(mana, lower(:mana)) ORDER BY name ASC")
                 .addEntity("cards", Card.class)
                 .setParameter("mana", mana)
                 .setFirstResult(offset)
@@ -112,7 +112,7 @@ public class CardDAO {
         List cards = null;
         try {
             cards = session.createSQLQuery("select {cards.*} from cards {cards} where lower(name) like concat(lower(:name),'%') " +
-                        "and lower(type) = lower(:type) and exist(mana, :mana) order by name asc")
+                        "and lower(type) = lower(:type) and exist(mana, lower(:mana)) order by name asc")
                 .addEntity("cards", Card.class)
                 .setParameter("name", name)
                 .setParameter("type", type)
@@ -153,7 +153,7 @@ public class CardDAO {
         List cards = null;
         try {
             cards = session.createSQLQuery("select {cards.*} from cards {cards} where lower(name) like concat(lower(:name),'%') " +
-                        "and exist(mana, :mana) order by name asc")
+                        "and exist(mana, lower(:mana)) order by name asc")
                 .addEntity("cards", Card.class)
                 .setParameter("name", name)
                 .setParameter("mana", mana)
@@ -174,7 +174,7 @@ public class CardDAO {
         List cards = null;
         try {
             cards = session.createSQLQuery("select {cards.*} from cards {cards} where " + 
-                    "lower(type) = lower(:type) and exist(mana, :mana) order by name asc")
+                    "lower(type) = lower(:type) and exist(mana, lower(:mana)) order by name asc")
                 .addEntity("cards", Card.class)
                 .setParameter("type", type)
                 .setParameter("mana", mana)
