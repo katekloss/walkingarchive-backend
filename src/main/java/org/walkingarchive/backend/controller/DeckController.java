@@ -79,6 +79,8 @@ public class DeckController {
 
         JSONArray collection = jsonObject.getJSONArray("collection");
         
+        deck.removeAllCardsFromCollection();
+        
         for(int i = 0; i < collection.length(); i++) {
             Card card = CardDAO.getInstance().getCard(collection.getInt(i));
             deck.addCardToCollection(card);

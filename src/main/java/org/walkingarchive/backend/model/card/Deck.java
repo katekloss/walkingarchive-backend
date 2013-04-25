@@ -47,6 +47,12 @@ public class Deck {
         collection.remove(card);
     }
     
+    public void removeAllCardsFromCollection() {
+        for (int i = collection.size() - 1; i >= 0; i--) {
+            collection.remove(i);
+        }
+    }
+    
     public boolean contains(Card card) {
         return collection.contains(card);
     }
