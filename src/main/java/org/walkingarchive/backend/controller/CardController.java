@@ -155,12 +155,124 @@ public class CardController {
     
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Path("mana/{mana}/{offest}")
+    @Path("mana/{mana}/{offset}")
     public Response getCardsByManaOffset(@PathParam("mana") String mana,
             @PathParam("offset") int offset) {
         //TODO - validate input
         Response result;
         List<Card> c = CardDAO.getInstance().getCardsByMana(mana, (offset-1)*20);
+        if(c != null) {
+            result = Response.ok(c, MediaType.APPLICATION_JSON).build();
+        }
+        else {
+            result = Response.status(Status.NOT_FOUND).build();
+        }
+        return result;
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("name/{name}/type/{type}/mana/{mana}")
+    public Response getCardsByNameManaType(@PathParam("name") String name,
+            @PathParam("type") String type,
+            @PathParam("mana") String mana) {
+        //TODO - validate input
+        return getCardsByNameManaTypeOffset(name, type, mana, 1);
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("name/{name}/type/{type}/mana/{mana}/{offset}")
+    public Response getCardsByNameManaTypeOffset(@PathParam("name") String name,
+            @PathParam("type") String type,
+            @PathParam("mana") String mana,
+            @PathParam("offset") int offset) {
+        //TODO - validate input
+        Response result;
+        List<Card> c = CardDAO.getInstance().getCardsByNameManaType(name, type, mana, (offset-1)*20);
+        if(c != null) {
+            result = Response.ok(c, MediaType.APPLICATION_JSON).build();
+        }
+        else {
+            result = Response.status(Status.NOT_FOUND).build();
+        }
+        return result;
+    }
+    
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("/type/{type}/mana/{mana}")
+    public Response getCardsByManaType(@PathParam("type") String type,
+            @PathParam("mana") String mana) {
+        //TODO - validate input
+        return getCardsByManaTypeOffset(type, mana, 1);
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("type/{type}/mana/{mana}/{offset}")
+    public Response getCardsByManaTypeOffset(@PathParam("type") String type,
+            @PathParam("mana") String mana,
+            @PathParam("offset") int offset) {
+        //TODO - validate input
+        Response result;
+        List<Card> c = CardDAO.getInstance().getCardsByManaType(type, mana, (offset-1)*20);
+        if(c != null) {
+            result = Response.ok(c, MediaType.APPLICATION_JSON).build();
+        }
+        else {
+            result = Response.status(Status.NOT_FOUND).build();
+        }
+        return result;
+    }
+    
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("name/{name}/mana/{mana}")
+    public Response getCardsByNameMana(@PathParam("name") String name,
+            @PathParam("mana") String mana) {
+        //TODO - validate input
+        return getCardsByNameManaOffset(name, mana, 1);
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("name/{name}/mana/{mana}/{offset}")
+    public Response getCardsByNameManaOffset(@PathParam("name") String name,
+            @PathParam("mana") String mana,
+            @PathParam("offset") int offset) {
+        //TODO - validate input
+        Response result;
+        List<Card> c = CardDAO.getInstance().getCardsByNameMana(name, mana, (offset-1)*20);
+        if(c != null) {
+            result = Response.ok(c, MediaType.APPLICATION_JSON).build();
+        }
+        else {
+            result = Response.status(Status.NOT_FOUND).build();
+        }
+        return result;
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("name/{name}/type/{type}")
+    public Response getCardsByNameType(@PathParam("name") String name,
+            @PathParam("type") String type) {
+        //TODO - validate input
+        return getCardsByNameTypeOffset(name, type, 1);
+    }
+    
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("name/{name}/type/{type}/{offset}")
+    public Response getCardsByNameTypeOffset(@PathParam("name") String name,
+            @PathParam("type") String type,
+            @PathParam("offset") int offset) {
+        //TODO - validate input
+        Response result;
+        List<Card> c = CardDAO.getInstance().getCardsByNameType(name, type, (offset-1)*20);
         if(c != null) {
             result = Response.ok(c, MediaType.APPLICATION_JSON).build();
         }

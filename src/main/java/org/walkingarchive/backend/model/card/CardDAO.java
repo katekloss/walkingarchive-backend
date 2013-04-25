@@ -107,6 +107,87 @@ public class CardDAO {
         return cards;
     }
     
+    public List<Card> getCardsByNameManaType(String name, String type, String mana, int offset) {
+        Session session = DbHelper.getSession();
+        List cards = null;
+        try {
+            cards = session.createSQLQuery("select {cards.*} from cards {cards} where lower(name) like concat(lower(:name),'%') " +
+                        "and lower(type) = lower(:type) and exist(mana, :mana) order by name asc")
+                .addEntity("cards", Card.class)
+                .setParameter("name", name)
+                .setParameter("type", type)
+                .setParameter("mana", mana)
+                .setFirstResult(offset)
+                .setMaxResults(20)
+                .list();
+        }
+        finally {
+            session.close();
+        }
+        return cards;
+    }
+    
+    public List<Card> getCardsByNameType(String name, String type, int offset) {
+        Session session = DbHelper.getSession();
+        List cards = null;
+        try {
+            cards = session.createSQLQuery("select {cards.*} from cards {cards} where lower(name) like concat(lower(:name),'%') " +
+                        "and lower(type) = lower(:type) order by name asc")
+                .addEntity("cards", Card.class)
+                .setParameter("name", name)
+                .setParameter("type", type)
+                .setFirstResult(offset)
+                .setMaxResults(20)
+                .list();
+        }
+        finally {
+            session.close();
+        }
+        return cards;
+    }
+    
+
+    
+    public List<Card> getCardsByNameMana(String name, String mana, int offset) {
+        Session session = DbHelper.getSession();
+        List cards = null;
+        try {
+            cards = session.createSQLQuery("select {cards.*} from cards {cards} where lower(name) like concat(lower(:name),'%') " +
+                        "and exist(mana, :mana) order by name asc")
+                .addEntity("cards", Card.class)
+                .setParameter("name", name)
+                .setParameter("mana", mana)
+                .setFirstResult(offset)
+                .setMaxResults(20)
+                .list();
+        }
+        finally {
+            session.close();
+        }
+        return cards;
+    }
+    
+
+    
+    public List<Card> getCardsByManaType(String type, String mana, int offset) {
+        Session session = DbHelper.getSession();
+        List cards = null;
+        try {
+            cards = session.createSQLQuery("select {cards.*} from cards {cards} where " + 
+                    "lower(type) = lower(:type) and exist(mana, :mana) order by name asc")
+                .addEntity("cards", Card.class)
+                .setParameter("type", type)
+                .setParameter("mana", mana)
+                .setFirstResult(offset)
+                .setMaxResults(20)
+                .list();
+        }
+        finally {
+            session.close();
+        }
+        return cards;
+    }
+    
     public Card getCard(int cardId) {
         Session session = DbHelper.getSession();
         Card card = null;
