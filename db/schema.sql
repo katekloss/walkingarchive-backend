@@ -201,7 +201,6 @@ JOIN
 (
 	SELECT cardid, ts_rank_intersect(strip(textvector)::text, strip(to_tsvector(query))::text) AS rank
 	FROM CardVectors
-	WHERE to_tsquery(query) @@ textvector
 	ORDER BY rank DESC
 	LIMIT count
 ) AS X ON X.cardid = C.cardid
