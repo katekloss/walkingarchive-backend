@@ -18,6 +18,9 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+/** A helper class for Hibernate to restore the PostgreSQL hstore type as a Java HashMap
+ * 
+ */
 public class HstoreUserType implements UserType {
  
     public int[] sqlTypes()

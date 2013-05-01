@@ -3,63 +3,109 @@ package org.walkingarchive.backend.model.card;
 import java.math.BigDecimal;
 import java.util.Date;
 
+/** An object to hold the Price of a Cad from a particular Set
+ * 
+ */
 public class Price
 {
-	private Integer id;
-	private Set set;
-	private BigDecimal price;
-	private String source;
-	private Date date;
+    private Integer id;
+    private Set set;
+    private BigDecimal price;
+    private String source;
+    private Date date;
 
-	public Price() {}
+    /** Price constructor
+     * 
+     */
+    public Price() {}
 
-	public Integer getId()
-	{
-		return id;
-	}
+    /** Get the id
+     * 
+     * @return int id
+     */
+    public Integer getId()
+    {
+        return id;
+    }
 
-	public void setId(Integer value)
-	{
-		id = value;
-	}
+    /** Set the id (for Hibernate)
+     * 
+     * @param value int id
+     */
+    public void setId(Integer value)
+    {
+        id = value;
+    }
 
-	public Set getSet()
-	{
-		return set;
-	}
+    /** Get the Set the price is associated with
+     * 
+     * @return Set
+     */
+    public Set getSet()
+    {
+        return set;
+    }
 
-	public void setSet(Set value)
-	{
-		set = value;
-	}
+    /** Set the Set
+     * 
+     * @param value Set
+     */
+    public void setSet(Set value)
+    {
+        set = value;
+    }
 
-	public BigDecimal getPrice()
-	{
-		return price;
-	}
+    /** Get the monetary value of this price
+     * 
+     * @return BigDecimal value of the card
+     */
+    public BigDecimal getPrice()
+    {
+        return price;
+    }
 
-	public void setPrice(BigDecimal value)
-	{
-		price = value;
-	}
+    /** Set the monetary value
+     * 
+     * @param value BigDecimal monetary value
+     */
+    public void setPrice(BigDecimal value)
+    {
+        price = value;
+    }
 
-	public String getSource()
-	{
-		return source;
-	}
+    /** Get the source of information that provided the monetary values
+     * 
+     * @return String with the online destination
+     */
+    public String getSource()
+    {
+        return source;
+    }
 
-	public void setSource(String value)
-	{
-		source = value;
-	}
+    /** Set the source of information for the monetary value
+     * 
+     * @param value String source
+     */
+    public void setSource(String value)
+    {
+        source = value;
+    }
 
-	public Date getDate()
-	{
-		return date;
-	}
+    /** Get the date that this value was checked
+     * 
+     * @return Date that this price was checked
+     */
+    public Date getDate()
+    {
+        return date;
+    }
 
-	public void setDate(Date value)
-	{
-		date = value;
-	}
+    /** Set the date that this value was checked
+     * 
+     * @param value Date that the price was checked
+     */
+    public void setDate(Date value)
+    {
+        date = value;
+    }
 }

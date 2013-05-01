@@ -41,7 +41,11 @@ public class TradeController {
     @Context
     protected UriInfo uriInfo;
     
-    
+    /** Retrieves Trades for a user with the given user id
+     * 
+     * @param userId - int specifying the id of the owner of the Trades
+     * @return List of Trades belonging to the user with the given id in JSON array
+     */
     @GET
     @Path("user/{userId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -50,16 +54,12 @@ public class TradeController {
         Integer userIdInt = Integer.parseInt(userId);
         return TradeDAO.getInstance().getTradesForUser(userIdInt);
     }
-
-    @GET
-    @Path("date/{date}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public List<Trade> getTradeByUser(@PathParam("date") Long date) {
-        //TODO - validate input
-        Date tradeDate = new Date(date);
-        return TradeDAO.getInstance().getTradesForDate(tradeDate);
-    }
     
+    /** Retrieves the Trade with the given id.
+     * 
+     * @param id - int specifying the id of the Trade to retrieve
+     * @return Trade with the given id as a JSON Object
+     */
     @GET
     @Path("id/{tradeId}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -72,6 +72,13 @@ public class TradeController {
             return Response.status(Status.NOT_FOUND).build();
     }
 
+    /** Creates a new trade given the new Trade information in JSON form.
+     * 
+     * @param json - a String representing the JSON for a new Trade. This must include
+     *  the user id of the Trade owner.
+     * @return HTTP Response ok with the newly created Trade data as a JSON object
+     * @throws Exception
+     */
     @PUT
     @Path("add")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -85,6 +92,13 @@ public class TradeController {
         return Response.ok(trade, MediaType.APPLICATION_JSON).build();
     }
     
+    /** Updates a previously created trade with the given information in the JSON parameter.
+     * 
+     * @param json - a String of JSON spcifying the id of the Trade to modify, a list of integer ids for 'givingCards',
+     * and a list of integer ids for 'receivingCards'
+     * @return HTTP Response ok with the newly modified Tade information as a JSON object
+     * @throws Exception
+     */
     @POST
     @Path("update")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -112,6 +126,11 @@ public class TradeController {
         return Response.ok(trade, MediaType.APPLICATION_JSON).build();
     }
     
+    /** Deletes a Trade with the given id
+     * 
+     * @param id - int representing the id of the Trade to delete
+     * @return HTTP Response ok if the deletion is successful, or 404 if the Trade to delete cannot be found
+     */
     @DELETE
     @Path("delete/{id}")
     public Response delete(@PathParam("id") int id) {

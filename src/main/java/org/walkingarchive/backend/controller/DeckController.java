@@ -27,6 +27,12 @@ import org.walkingarchive.backend.model.card.Deck;
 import org.walkingarchive.backend.model.security.SecurityDAO;
 import org.walkingarchive.backend.model.security.User;
 
+/** DeckController is responsible for serving information about user's Decks via rest services. 
+ * Each method is tagged with the url path to visit (appended to the main url dev.mtgwalkingarchive.com:8080).
+ * 
+ * @author Alison Orlando
+ *
+ */
 @Path("/deck/")
 public class DeckController {
     @Context
@@ -38,6 +44,11 @@ public class DeckController {
     @Context
     protected UriInfo uriInfo;
 
+    /** Retrieves a deck by the deck owner's id
+     * 
+     * @param userId - an Integer representing the id of the user who owns the deck
+     * @return List of Decks belonging to the given user as a JSON array
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("user/{userId}")
@@ -47,6 +58,11 @@ public class DeckController {
         return CardDAO.getInstance().getDecks(user);
     }
     
+    /** Retrieves a deck by id
+     * 
+     * @param id - an Integer representing the id of the Deck
+     * @return Deck with the given id as a JSON object
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("id/{id}")
@@ -56,6 +72,14 @@ public class DeckController {
         return deck;
     }
     
+    /** A method to add a Deck, using HTTP Put. This method consumes JSON data attached to the request.
+     * The JSON must specify the deck name and the id of the user who will own the Deck.
+     * By default, there are no cards in a newly created Deck.
+     * 
+     * @param json - a String of JSON specifying the Deck name and user id of the Deck owner
+     * @return HTTP OK response with newly created Deck information attached as a JSON object
+     * @throws Exception
+     */
     @PUT
     @Path("add")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -69,6 +93,15 @@ public class DeckController {
         return Response.ok(deck, MediaType.APPLICATION_JSON).build();
     }
     
+    /** Updates a previously created Deck, as specified in the JSON data attached to teh request.
+     * The JSON must specify the id of the Deck to be modified, the name (new or the same) of the Deck,
+     * and a list of card ids to be held on the deck. These ids will replace any previous list on the Deck.
+     * 
+     * @param json - a String of JSON specifying the Deck id, name, and list of cards
+     * @return HTTP OK response with newly modified Deck information attached as a JSON object, 
+     * or Status 404 i the Deck is not found
+     * @throws Exception
+     */
     @POST
     @Path("update")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -101,6 +134,11 @@ public class DeckController {
         return result;
     }
 
+    /** Deletes a Deck with the specified id
+     * 
+     * @param id - int reperesenting the id of the Deck
+     * @return HTTP Response ok if the deletion in successful, or 404 if the Deck to remove is not found
+     */
     @DELETE
     @Path("delete/{id}")
     public Response delete(@PathParam("id") int id) {

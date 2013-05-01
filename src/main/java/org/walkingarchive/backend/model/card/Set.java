@@ -1,29 +1,51 @@
 package org.walkingarchive.backend.model.card;
 
+/** Object representing a released set of Magic cards
+ *
+ */
 public class Set
 {
-	Integer id;
-	String name;
+    Integer id;
+    String name;
 
-	public Set() {}
+    /** Set constructor
+     * 
+     */
+    public Set() {}
 
-	public Integer getId()
-	{
-		return id;
-	}
+    /** Get the id
+     * 
+     * @return int id
+     */
+    public Integer getId()
+    {
+        return id;
+    }
 
-	public void setId(Integer value)
-	{
-		id = value;
-	}
+    /** Set the id
+     * 
+     * @param value int id
+     */
+    public void setId(Integer value)
+    {
+        id = value;
+    }
 
-	public String getName()
-	{
-		return name;
-	}
+    /** Get the name of the Set
+     * 
+     * @return String name
+     */
+    public String getName()
+    {
+        return name;
+    }
 
-	public void setName(String value)
-	{
-		name = value;
-	}
+    /** Set the name of the Set
+     * 
+     * @param value String name
+     */
+    public void setName(String value)
+    {
+        name = value;
+    }
 }

@@ -7,20 +7,32 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.walkingarchive.backend.DbHelper;
 
+/** A singleton responsible for all database interactions for Trade objects:
+ * Restores Trades from the database, saves new Trades, updates existing Trades,
+ * and deletes Trades from the database.
+ *
+ */
 public class TradeDAO {
     private static TradeDAO instance = new TradeDAO();
 
-    //Singleton
+    /** Retrieves the singleton instance of the TradeDAO
+     * 
+     * @return TradeDAO
+     */
     public static TradeDAO getInstance() {
         return instance;
     }
     
+    /** Private constructor
+     * 
+     */
     private TradeDAO() {}
-
-    public List<Trade> getAllTrades() {
-        return null;
-    }
     
+    /** Retrieve a Trade by id
+     * 
+     * @param id int id of Trade to restore
+     * @return Trade with the given id, or null if it does not exist
+     */
     public Trade getTradeForId(Integer id) {
         Session session = DbHelper.getSession();
         Trade trade = null;
@@ -34,6 +46,11 @@ public class TradeDAO {
         return trade;
     }
     
+    /** Retrieve a list of Trades by user id
+     * 
+     * @param userId int id of the user that owns the Trades
+     * @return List of Trades belonging to the user
+     */
     public List<Trade> getTradesForUser(Integer userId) {
         Session session = DbHelper.getSession();
         List trades = null;
@@ -47,11 +64,13 @@ public class TradeDAO {
         }
         return trades;
     }
-
-    public List<Trade> getTradesForDate(Date date) {
-        return null;
-    }
     
+    /** Persists a new Trade in the database
+     * 
+     * @param trade newly created Trade object to persist
+     * @return Trade after save, including the id assigned by the database
+     * @throws Exception
+     */
     public Trade createTrade(Trade trade) throws Exception {
         Session session = DbHelper.getSession();
         Transaction tx = null;
@@ -72,6 +91,12 @@ public class TradeDAO {
         return trade;
     }
     
+    /** Update an existing Trade in the database
+     * 
+     * @param trade Trade object to update
+     * @return Trade with the updated information
+     * @throws Exception
+     */
     public Trade updateTrade(Trade trade) throws Exception {
         Session session = DbHelper.getSession();
         Transaction tx = null;
@@ -91,6 +116,10 @@ public class TradeDAO {
         return trade;
     }
     
+    /** Remove a persisted Trade from the database
+     * 
+     * @param trade Trade object to delete
+     */
     public void delete(Trade trade) {
         Session session = DbHelper.getSession();
         Transaction tx = null;

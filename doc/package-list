@@ -1,0 +1,7 @@
+org.walkingarchive.backend
+org.walkingarchive.backend.controller
+org.walkingarchive.backend.helpers
+org.walkingarchive.backend.model.card
+org.walkingarchive.backend.model.security
+org.walkingarchive.backend.model.trade
+org.walkingarchive.backend.model.types

@@ -20,6 +20,13 @@ import org.walkingarchive.backend.model.card.Card;
 import org.walkingarchive.backend.model.card.CardDAO;
 import org.walkingarchive.backend.model.card.Set;
 
+/** CardController is responsible for serving information about Magic Cards via rest services. 
+ * Each method is tagged with the url path to visit (appended to the main url dev.mtgwalkingarchive.com:8080).
+ * 
+ * @author Alison Orlando
+ *
+ */
+
 @Path("/card/")
 public class CardController {
     @Context
@@ -31,6 +38,13 @@ public class CardController {
     @Context
     protected UriInfo uriInfo;
     
+    
+    /** Retrieves a Magic card by its id and returns the card as a JSON object.
+     * If no card is found, a 404 status is returned.
+     * 
+     * @param card - an integer representing the card id
+     * @return Magic card represented as a JSON object, or Status 404 if not found.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("id/{card}")
@@ -47,6 +61,13 @@ public class CardController {
         return result;
     }
     
+    /** Retrieves Magic cards by name and returns the cards as a JSON array.
+     * If no card is found, an empty array is returned. This method defaults to
+     * returning the first 20 results found when searching for the name prefix.
+     * 
+     * @param card - a string representing the card name
+     * @return Magic cards represented as a JSON array, or Status 404 if not found.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("name/{card}")
@@ -62,6 +83,15 @@ public class CardController {
         return result;
     }
     
+    /** Retrieves Magic cards by name and returns the cards as a JSON array.
+     * If no card is found, an empty array is returned. Similar to the getCardsByName
+     * method, this function allows the caller to specify the offset of results to return.
+     * 
+     * @param card - a string representing the card name
+     * @param offset - an integer representing the 'page' of results to retrieve. The default is 1,
+     * which returns the first 20 results.
+     * @return Magic cards represented as a JSON array, or Status 404 if not found.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("name/{card}/{offset}")
@@ -78,16 +108,13 @@ public class CardController {
         return result;
     }
     
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("name/{card}/version/{version}")
-    public Card getCardByNameAndVersion(@PathParam("card") String card, 
-            @PathParam("version") String version) {
-        //TODO - validate input
-        Card c = CardDAO.getInstance().getCardByNameAndVersion(card, version);
-        return c;
-    }
-    
+    /** Retrieves Magic cards by type and returns the cards as a JSON array.
+     * If no cards are found, an empty array is returned. This method defaults to
+     * returning the first 20 results found when searching for the name prefix.
+     * 
+     * @param type - a string representing the type of a Magic card (i.e. 'enchantment')
+     * @return Magic cards  of the given type represented as a JSON array, or Status 404 if not found.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("type/{type}")
@@ -96,6 +123,15 @@ public class CardController {
         return getCardsByTypeOffset(type, 0);
     }
     
+    /** Retrieves Magic cards by type and returns the cards as a JSON array.
+     * If no cards are found, an empty array is returned. Similar to the getCardsByType
+     * method, this function allows the caller to specify the offset of results to return.
+     * 
+     * @param type - a string representing the type of a Magic card (i.e. 'enchantment')
+     * @param offset - an integer representing the 'page' of results to retrieve. The default is 1, 
+     * which returns the first 20 results
+     * @return Magic cards  of the given type represented as a JSON array, or Status 404 if not found.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("type/{type}/{offset}")
@@ -113,6 +149,12 @@ public class CardController {
         return result;
     }
     
+    /** Retrieves Magic cards by set and returns the cards as a JSON array.
+     * If no cards are found, an empty array is returned.
+     * 
+     * @param setId - an integer representing the set id of a Magic card
+     * @return Magic cards  of the given set represented as a JSON array, or Status 404 if not found.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("set/id/{set}")
@@ -129,6 +171,12 @@ public class CardController {
         return result;
     }
     
+    /** Retrieves Magic cards by set name and returns the cards as a JSON array.
+     * If no cards are found, an empty array is returned.
+     * 
+     * @param setname - a string representing the name of a set of a Magic card
+     * @return Magic cards of the given set represented as a JSON array, or Status 404 if not found.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("set/name/{set}")
@@ -145,6 +193,13 @@ public class CardController {
         return result;
     }
     
+    /** Retrieves Magic cards by mana color and returns the cards as a JSON array.
+     * If no cards are found, an empty array is returned. This method defaults to
+     * returning the first 20 results found when searching for the name prefix.
+     * 
+     * @param mana - a string representing the mana color of a Magic card (i.e. 'red')
+     * @return Magic cards of the given mana color represented as a JSON array, or Status 404 if not found.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("mana/{mana}")
@@ -153,6 +208,15 @@ public class CardController {
         return getCardsByManaOffset(mana, 1);
     }
     
+    /** Retrieves Magic cards by mana color and returns the cards as a JSON array.
+     * If no cards are found, an empty array is returned. Similar to the getCardsByMana
+     * method, this function allows the caller to specify the offset of results to return.
+     * 
+     * @param mana - a string representing the mana color of a Magic card (i.e. 'red')
+     * @param offset - an integer representing the 'page' of results to retrieve. The default is 1,
+     * which will return the first 20 results.
+     * @return Magic cards of the given mana color represented as a JSON array, or Status 404 if not found.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("mana/{mana}/{offset}")
@@ -170,6 +234,15 @@ public class CardController {
         return result;
     }
     
+    /** Retrieves Magic cards by a combination of name, type, and mana color and returns the cards as a JSON array.
+     * If no cards are found, an empty array is returned. This method defaults to
+     * returning the first 20 results found when searching for the name prefix.
+     * 
+     * @param name - a string representing the name of a Magic card, accepts prefix form
+     * @param type - a string representing the type of a Magic card (i.e. 'enchantment')
+     * @param mana - a srting representing the mana of a Magic card (i.e. 'red')
+     * @return Magic cards of the given name, type, and mana color represented as a JSON array, or Status 404 if not found.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("name/{name}/type/{type}/mana/{mana}")
@@ -180,6 +253,17 @@ public class CardController {
         return getCardsByNameManaTypeOffset(name, type, mana, 1);
     }
     
+    /** Retrieves Magic cards by a combination of name, type, and mana color and returns the cards as a JSON array.
+     * If no cards are found, an empty array is returned. Similar to the getCardsByNameManaType
+     * method, this function allows the caller to specify the offset of results to return.
+     * 
+     * @param name - a string representing the name of a Magic card, accepts prefix form
+     * @param type - a string representing the type of a Magic card (i.e. 'enchantment')
+     * @param mana - a srting representing the mana of a Magic card (i.e. 'red')
+     * @param offset - an integer representing the 'page' of results to retrieve. The default is 1,
+     * which will return the first 20 results.
+     * @return Magic cards of the given name, type, and mana color represented as a JSON array, or Status 404 if not found.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("name/{name}/type/{type}/mana/{mana}/{offset}")
@@ -200,6 +284,13 @@ public class CardController {
     }
     
 
+    /** Retrieves Magic cards by a combination of type and mana color and returns the cards as a JSON array.
+     * If no cards are found, an empty array is returned. By default, this method returns a maximum of 20 results.
+     * 
+     * @param type - a string representing the type of a Magic card (i.e. 'enchantment')
+     * @param mana - a srting representing the mana of a Magic card (i.e. 'red')
+     * @return Magic cards of the given type and mana color represented as a JSON array, or Status 404 if not found.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/type/{type}/mana/{mana}")
@@ -209,6 +300,16 @@ public class CardController {
         return getCardsByManaTypeOffset(type, mana, 1);
     }
     
+    /** Retrieves Magic cards by a combination of type and mana color and returns the cards as a JSON array.
+     * If no cards are found, an empty array is returned. Similar to the getCardsByeManaType
+     * method, this function allows the caller to specify the offset of results to return.
+     * 
+     * @param type - a string representing the type of a Magic card (i.e. 'enchantment')
+     * @param mana - a srting representing the mana of a Magic card (i.e. 'red')
+     * @param offset - an integer representing the 'page' of results to retrieve. The default is 1,
+     * which will return the first 20 results.
+     * @return Magic cards of the given type and mana color represented as a JSON array, or Status 404 if not found.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("type/{type}/mana/{mana}/{offset}")
@@ -228,6 +329,13 @@ public class CardController {
     }
     
 
+    /** Retrieves Magic cards by a combination of name and mana color and returns the cards as a JSON array.
+     * If no cards are found, an empty array is returned. By default, this method returns the first 20 results.
+     * 
+     * @param name - a string representing the name of a Magic card, accepts prefix form
+     * @param mana - a srting representing the mana of a Magic card (i.e. 'red')
+     * @return Magic cards of the given name and mana color represented as a JSON array, or Status 404 if not found.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("name/{name}/mana/{mana}")
@@ -237,6 +345,16 @@ public class CardController {
         return getCardsByNameManaOffset(name, mana, 1);
     }
     
+    /** Retrieves Magic cards by a combination of name and mana color and returns the cards as a JSON array.
+     * If no cards are found, an empty array is returned. Similar to the getCardsByNameMana
+     * method, this function allows the caller to specify the offset of results to return.
+     * 
+     * @param name - a string representing the name of a Magic card, accepts prefix form
+     * @param mana - a srting representing the mana of a Magic card (i.e. 'red')
+     * @param offset - an integer representing the 'page' of results to retrieve. The default is 1,
+     * which will return the first 20 results.
+     * @return Magic cards of the given name and mana color represented as a JSON array, or Status 404 if not found.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("name/{name}/mana/{mana}/{offset}")
@@ -255,6 +373,13 @@ public class CardController {
         return result;
     }
     
+    /** Retrieves Magic cards by a combination of name and type and returns the cards as a JSON array.
+     * If no cards are found, an empty array is returned. By default, this method returns the first 20 results.
+     * 
+     * @param name - a string representing the name of a Magic card, accepts prefix form
+     * @param type - a string representing the type of a Magic card (i.e. 'enchantment')
+     * @return Magic cards of the given name and type represented as a JSON array, or Status 404 if not found.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("name/{name}/type/{type}")
@@ -264,6 +389,16 @@ public class CardController {
         return getCardsByNameTypeOffset(name, type, 1);
     }
     
+    /** Retrieves Magic cards by a combination of name and type and returns the cards as a JSON array.
+     * If no cards are found, an empty array is returned. Similar to the getCardsByNameType
+     * method, this function allows the caller to specify the offset of results to return.
+     * 
+     * @param name - a string representing the name of a Magic card, accepts prefix form
+     * @param type - a string representing the type of a Magic card (i.e. 'enchantment')
+     * @param offset - an integer representing the 'page' of results to retrieve. The default is 1,
+     * which will return the first 20 results.
+     * @return Magic cards of the given name and type represented as a JSON array, or Status 404 if not found.
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("name/{name}/type/{type}/{offset}")
@@ -281,18 +416,13 @@ public class CardController {
         }
         return result;
     }
-    
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("value/{low}/{high}")
-    public List<Card> getCardsByValue(@PathParam("low") BigDecimal low,
-            @PathParam("high") BigDecimal high) {
-        //TODO - validate input
-//        System.out.println(low + " - " + high);
-//        return CardFactory.getInstance().getCardsInValueRange(low, high);
-        throw new RuntimeException("getCardsByValue is unimplemented");
-    }
 
+    /** Retrieves Magic cards by running the search engine query on the passed in string.
+     * This method retrieves the first 20 results.
+     * 
+     * @param query - a String representing the words on a Magic card
+     * @return Magic cards that match terms in the query, weighted by relevance, or null if none are found
+     */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("search/{query}")

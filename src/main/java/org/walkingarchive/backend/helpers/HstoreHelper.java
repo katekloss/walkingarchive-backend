@@ -6,10 +6,18 @@ package org.walkingarchive.backend.helpers;
 import java.util.HashMap;
 import java.util.Map;
 
+/** A helper class for Hibernate to restore the PostgreSQL hstore type to a Java HashMap
+ *
+ */
 public class HstoreHelper {
 
     private static final String K_V_SEPARATOR = "=>";
 
+    /** Converts a Map to a String representation for the hstore
+     * 
+     * @param m The Java Map
+     * @return String representing the Map in the hstore format
+     */
     public static String toString(Map<String, String> m) {
         if (m.isEmpty())
             return "";
@@ -28,6 +36,11 @@ public class HstoreHelper {
         return sb.toString();
     }
 
+    /** Converts a String from an hstore to a Java Map
+     * 
+     * @param s String from hstore
+     * @return Map
+     */
     public static Map<String, String> toMap(String s) {
         Map<String, String> m = new HashMap<String, String>();
         if (!(s != null && s.length() > 0 && s.trim().length() > 0))

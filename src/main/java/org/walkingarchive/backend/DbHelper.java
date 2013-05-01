@@ -5,8 +5,14 @@ import org.hibernate.service.ServiceRegistry;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.Session;
 
+/** Database helper for establishing a connection
+ */
 public class DbHelper
 {
+    /** Establishes the database connection
+     * 
+     * @return Session
+     */
     public static Session getSession()
     {
         Configuration config = new Configuration();

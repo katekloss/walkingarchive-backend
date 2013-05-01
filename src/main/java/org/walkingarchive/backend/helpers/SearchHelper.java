@@ -5,8 +5,16 @@ import java.lang.StringBuilder;
 import java.util.LinkedList;
 import java.util.List;
 
+/**A Search helper for Hibernate to use PostgrSQL search
+ *
+ */
 public class SearchHelper
 {
+    /** Converts a string of text words into a linked list
+     * 
+     * @param text String of text
+     * @return LinkedList of words for search
+     */
     public static LinkedList<String> tokenize(String text)
     {
         LinkedList tokens = new LinkedList();
@@ -21,6 +29,12 @@ public class SearchHelper
         return tokens;
     }
 
+    /** Converts from LinkedList of words to a text String
+     * 
+     * @param list List of words to create text from
+     * @param joiner the delimiter to join the words
+     * @return String of text
+     */
     public static String join(List<String> list, String joiner)
     {
         StringBuilder builder = new StringBuilder();
